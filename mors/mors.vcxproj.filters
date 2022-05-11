@@ -21,15 +21,9 @@
     <ClCompile Include="GameField.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="GameShips.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameField.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="GameShips.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

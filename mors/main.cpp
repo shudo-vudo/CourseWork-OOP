@@ -2,6 +2,7 @@
 
 int main()
 {
-    Field mors;
-    mors.drawField();
+    Field player1;
+    player1.setFieldManually();
+    Field player2;
 }

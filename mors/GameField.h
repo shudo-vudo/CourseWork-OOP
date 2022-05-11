@@ -7,20 +7,26 @@
 
 using namespace std;
 
+enum Keys { Up = 72, Left = 75, Right = 77, Down = 80, Enter = 13, Esc = 27, BackSpace = 8, Q = 113 };
+
 class Field {
 protected:
-	int _shipField[10][10];
+	int _shipField[10][10] = { 0 };
 public:
-	Field();
 	void drawField();
+	bool checkField();
+	void setFieldManually();
+	void setFieldRandomly();
 };
 
 class Ship : public Field {
 protected:
-	int _type;
-	int count;
+	int _index;
+	bool _isHorisontal;
+	int _deck;
 public:
-	virtual void setShip() = 0;
+	Ship();
+	Ship(int, int);
 };
 
 class Game : public Field, public Ship {
