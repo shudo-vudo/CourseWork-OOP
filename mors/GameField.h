@@ -4,17 +4,43 @@
 #include <iostream>
 #include <conio.h>
 #include <random>
+#include <Windows.h>
 
 using namespace std;
 
 enum Keys { Up = 72, Left = 75, Right = 77, Down = 80, Enter = 13, Esc = 27, BackSpace = 8, Q = 113 };
 
-class Field {
+struct Coords {
+	int x;
+	int y;
+	int status;
+	Coords();
+	Coords(int,int,int);
+};
+
+/*
+	Значения status для поля:
+		0 - пустое нетронутое поле;
+		1 - разбитая палуба корабля;
+		2 - пустое тронутое поле;
+		3 - палуба корабля;
+*/
+
+class Game {
 protected:
-	int _shipField[10][10] = { 0 };
+	bool _end;
 public:
-	void drawField();
-	bool checkField();
+	Game();
+};
+
+class Field : public Game {
+protected:
+	Coords _friendlyShipField[10][10];
+	Coords _enemyShipField[10][10];
+public:
+	Field();
+	void drawFields();
+	bool checkFields();
 	void setFieldManually();
 	void setFieldRandomly();
 };
@@ -27,14 +53,9 @@ protected:
 public:
 	Ship();
 	Ship(int, int);
+	bool isHorisont();
 };
 
-class Game : public Field, public Ship {
-protected:
-	bool _end;
-public:
-	Game();
-};
-
+void gotoxy(int, int);
 
 #endif 
