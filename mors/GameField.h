@@ -20,10 +20,11 @@ struct Coords {
 
 /*
 	Value status for field:
-		0 - empty untouched field;
+		0 - empty untouched cell;
 		1 - Hitted deck;
-		2 - empty touched field;
+		2 - empty touched cell;
 		3 - Deck;
+		4 - empty cell near ship;
 */
 
 class Game {
@@ -40,7 +41,7 @@ protected:
 public:
 	Field();
 	void drawFields();
-	bool checkFields();
+	bool checkFields(char);
 	void setFieldManually();
 	void setFieldRandomly();
 };

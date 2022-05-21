@@ -14,7 +14,7 @@ Coords::Coords(int xc, int yc, int stat) {
 	this->status = stat;
 }
 
-Field::Field() {
+Field::Field() : Game() {
 	for (int i = 0; i < 10; i++)
 		for (int j = 0; j < 10; j++) {
 			_friendlyShipField[i][j].x = i;
@@ -85,20 +85,32 @@ void Field::drawFields() {
 	cout << " " << endl;
 }
 
-bool Field::checkFields() {
-	for (int i = 0; i < 10; i++)
-		for (int j = 1; j < 10; j++) {
-			if (_friendlyShipField[i][j].status != _friendlyShipField[i][j - 1].status)
-				if (_friendlyShipField[i][j].status != 0 && _friendlyShipField[i][j - 1].status != 0)
-					return false;
-			if (_friendlyShipField[j][i].status != _friendlyShipField[j - 1][i].status)
-				if (_friendlyShipField[j][i].status != 0 && _friendlyShipField[j - 1][i].status != 0)
-					return false;
-		}
+bool Field::checkFields(char type) {
+	if (type == 'f')
+		for (int i = 0; i < 10; i++)
+			for (int j = 1; j < 10; j++) {
+				if (_friendlyShipField[i][j].status != _friendlyShipField[i][j - 1].status)
+					if (_friendlyShipField[i][j].status != 0 && _friendlyShipField[i][j - 1].status != 0)
+						return false;
+				if (_friendlyShipField[j][i].status != _friendlyShipField[j - 1][i].status)
+					if (_friendlyShipField[j][i].status != 0 && _friendlyShipField[j - 1][i].status != 0)
+						return false;
+			}
+	else if (type == 'e')
+		for (int i = 0; i < 10; i++)
+			for (int j = 1; j < 10; j++) {
+				if (_enemyShipField[i][j].status != _enemyShipField[i][j - 1].status)
+					if (_enemyShipField[i][j].status != 0 && _enemyShipField[i][j - 1].status != 0)
+						return false;
+				if (_enemyShipField[j][i].status != _enemyShipField[j - 1][i].status)
+					if (_enemyShipField[j][i].status != 0 && _enemyShipField[j - 1][i].status != 0)
+						return false;
+			}
 	return true;
 }
 
 void Field::setFieldManually() {
+	this->drawFields();
 	int deck = 4;
 	int index = 1;
 	int count = 0;
@@ -109,30 +121,47 @@ void Field::setFieldManually() {
 		y = 0;
 		x = 0;
 		count += 1;
-		if (ship.isHorisont()) {
-			for (int i = 0; i < deck; i++)
-				_friendlyShipField[y][i + x].status = 1;
-		}
-		else
-			for (int i = 0; i < deck; i++)
-				_friendlyShipField[y + i][x].status = 1;
 		while (true) {
 			switch (_getch()) {
-			case Keys::Up:
-				if ((y - 1 >= 0) && (ship.isHorisont() == true)) {
-					for (int i = 0; i < deck; i++)
-						_friendlyShipField[y + i][x].status = 0;
-					y -= 1;
-					for (int i = 0; i < deck; i++)
-						_friendlyShipField[y + i][x].status = 1;
-					if (this->checkFields() == false) {
-						for (int i = 0; i < deck; i++)
-							_friendlyShipField[y + i][x].status = 0;
-					}
+				case Keys::Up: {
+
+					break;
+				};
+				case Keys::Down: {
+	
+					break;
+				};
+				case Keys::Left: {
+
+					break;
+				};
+				case Keys::Right: {
+	
+					break;
+				}
+				case Keys::Q: {
+
+					break;
 				}
 			}
 		}
 	}
+}
+// попытки до этого сделать перемещение вверх
+/*if ((y - 1 >= 0) && (ship.isHorisont() == true)) {
+	for (int i = 0; i < deck; i++)
+		_friendlyShipField[y + i][x].status = 0;
+		y -= 1;
+	for (int i = 0; i < deck; i++)
+		_friendlyShipField[y + i][x].status = 1;
+		if (this->checkFields() == false) {
+	for (int i = 0; i < deck; i++)
+		_friendlyShipField[y + i][x].status = 0;
+	}
+}*/
+
+void Field::setFieldRandomly() {
+
 }
 
 Game::Game()
@@ -160,6 +189,8 @@ bool Ship::isHorisont()
 
 
 //na vsyakii sluchai
+
+//function for drawing at console
 void gotoxy(int xpos, int ypos)
 {
 	COORD scrn;
