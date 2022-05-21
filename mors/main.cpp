@@ -8,4 +8,5 @@ int main()
     cout << char(210);*/
     Field game;
     game.drawFields();
+    
 }

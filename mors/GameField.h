@@ -48,12 +48,11 @@ public:
 
 class Ship : public Field {
 protected:
-	int _index;
 	bool _isHorisontal;
 	int _deck;
 public:
 	Ship();
-	Ship(int, int);
+	Ship(int);
 	bool isHorisont();
 };
 

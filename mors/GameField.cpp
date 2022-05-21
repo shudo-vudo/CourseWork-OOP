@@ -111,13 +111,13 @@ bool Field::checkFields(char type) {
 
 void Field::setFieldManually() {
 	this->drawFields();
+	int tempField[10][10] = { 0 };
 	int deck = 4;
-	int index = 1;
 	int count = 0;
 	int x = 0;
 	int y = 0;
 	while (true) {
-		Ship ship(deck, index);
+		Ship ship(deck);
 		y = 0;
 		x = 0;
 		count += 1;
@@ -170,14 +170,12 @@ Game::Game()
 }
 
 Ship::Ship() {
-	_index = 99;
 	_isHorisontal = true;
 	_deck = 0;
 }
 
-Ship::Ship(int deck, int index)
+Ship::Ship(int deck)
 {
-	_index = index;
 	_isHorisontal = true;
 	_deck = deck;
 }
