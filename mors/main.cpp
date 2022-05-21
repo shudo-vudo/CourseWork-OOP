@@ -2,7 +2,7 @@
 
 int main()
 {
-    // проверочка всего
+    // proverka vsego
     gotoxy(50, 50);
     cout << char(210);
     Field player1;

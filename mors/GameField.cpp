@@ -1,6 +1,6 @@
 #include "GameField.h"
 
-// это квадрат: char(219);
+// this is square: char(219);
 
 Coords::Coords() {
 	this->status = 99;
@@ -159,7 +159,7 @@ bool Ship::isHorisont()
 }
 
 
-//на всякий случай
+//na vsyakii sluchai
 void gotoxy(int xpos, int ypos)
 {
 	COORD scrn;

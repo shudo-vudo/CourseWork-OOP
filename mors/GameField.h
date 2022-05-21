@@ -19,11 +19,11 @@ struct Coords {
 };
 
 /*
-	Значения status для поля:
-		0 - пустое нетронутое поле;
-		1 - разбитая палуба корабля;
-		2 - пустое тронутое поле;
-		3 - палуба корабля;
+	Value status for field:
+		0 - empty untouched field;
+		1 - Hitted deck;
+		2 - empty touched field;
+		3 - Deck;
 */
 
 class Game {
