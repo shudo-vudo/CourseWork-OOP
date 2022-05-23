@@ -25,6 +25,7 @@ struct Coords {
 		2 - empty touched cell;
 		3 - Deck;
 		4 - empty cell near ship;
+		5 - Hidden deck;
 */
 
 class Game {
@@ -40,7 +41,9 @@ protected:
 	Coords _enemyShipField[10][10];
 public:
 	Field();
+	void setShipFieldCellStatus(char,int,int,int);
 	void drawFields();
+	void showFields();
 	bool checkFields(char);
 	void setFieldManually();
 	void setFieldRandomly();
@@ -54,8 +57,9 @@ public:
 	Ship();
 	Ship(int);
 	bool isHorisont();
+	void swap();
+	int getShipDeck();
 };
-
 void gotoxy(int, int);
 
 #endif 
