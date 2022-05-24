@@ -16,6 +16,7 @@ struct Coords {
 	int status;
 	Coords();
 	Coords(int,int,int);
+	int getStatus();
 };
 
 /*
@@ -43,7 +44,7 @@ public:
 	Field();
 	void setShipFieldCellStatus(char,int,int,int);
 	void drawFields();
-	void showFields();
+	void showFields(Coords field[10][10]);
 	bool checkFields(char);
 	void setFieldManually();
 	void setFieldRandomly();

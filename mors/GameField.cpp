@@ -3,15 +3,19 @@
 // this is square: char(219);
 
 Coords::Coords() {
-	this->status = 99;
-	this->x = 99;
-	this->y = 99;
+	this->status = 0;
+	this->x = 0;
+	this->y = 0;
 }
 
 Coords::Coords(int xc, int yc, int stat) {
 	this->x = xc;
 	this->y = yc;
 	this->status = stat;
+}
+
+int Coords::getStatus() {
+	return this->status;
 }
 
 Field::Field() : Game() {
@@ -112,7 +116,7 @@ void Field::setFieldManually() {
 	int deck = 4;
 	int count = 0;
 	int tmp = 0;
-	while (count != 10) {
+	while (deck!=0) {
 		int x = 0;
 		int y = 0;
 		bool set = false;
@@ -126,16 +130,17 @@ void Field::setFieldManually() {
 				cout << ship._friendlyShipField[i][j].status;
 			cout << endl;
 		}
+		cout << ship.isHorisont() << endl;
 		cout << endl;
 		for (int i = 0; i < 10; i++) {
 			for (int j = 0; j < 10; j++)
 				cout << this->_friendlyShipField[i][j].status;
 			cout << endl;
 		}
-		ship.showFields();
+		ship.showFields(this->_friendlyShipField);
 		while (set != true) {
 			switch (_getch()) {
-				// bug
+				// good
 				case Keys::Q: {
 					if (ship.isHorisont() == true) {
 						if (y + deck - 1 < 10) {
@@ -166,12 +171,14 @@ void Field::setFieldManually() {
 						}
 					}
 					this->drawFields();
-					ship.showFields();
+					ship.showFields(this->_friendlyShipField);
 					for (int i = 0; i < 10; i++) {
 						for (int j = 0; j < 10; j++)
 							cout << ship._friendlyShipField[i][j].status;
 						cout << endl;
 					}
+					cout << endl;
+					cout << ship.isHorisont() << 1;
 					cout << endl;
 					for (int i = 0; i < 10; i++) {
 						for (int j = 0; j < 10; j++)
@@ -180,37 +187,152 @@ void Field::setFieldManually() {
 					}
 					break;
 				}
-				// not completed
-				case Keys::Up: {
-					/*if (y != 0) {
+				// completed
+				case Keys::Left: {
+					if (y > 0 && y < 10 && ship.isHorisont() == true) {
 						for (int i = 0; i < deck; i++) {
-							if (this->_friendlyShipField[x + i][y - 1].status == 3 || this->_friendlyShipField[x][y - 1].status == 4)
+							if (this->_friendlyShipField[x + i][y - 1].status == 3 || this->_friendlyShipField[x + i][y - 1].status == 4)
 								ship.setShipFieldCellStatus('f', x + i, y - 1, 2);
 							else
 								ship.setShipFieldCellStatus('f', x + i, y - 1, 1);
+							ship.setShipFieldCellStatus('f', x + i, y, 0);
 						}
-					}*/
+						y -= 1;
+					}
+					else if (y > 0 && y < 10 && ship.isHorisont() == false) {
+							if (this->_friendlyShipField[x][y - 1].status == 3 || this->_friendlyShipField[x][y - 1].status == 4)
+								ship.setShipFieldCellStatus('f', x, y - 1, 2);
+							else
+								ship.setShipFieldCellStatus('f', x, y - 1, 1);
+							ship.setShipFieldCellStatus('f', x, y + deck - 1, 0);
+							y -= 1;
+					}
+					this->drawFields();
+					ship.showFields(this->_friendlyShipField);
+					for (int i = 0; i < 10; i++) {
+						for (int j = 0; j < 10; j++)
+							cout << ship._friendlyShipField[i][j].status;
+						cout << endl;
+					}
+					cout << endl << y;
+					cout << endl;
+					for (int i = 0; i < 10; i++) {
+						for (int j = 0; j < 10; j++)
+							cout << this->_friendlyShipField[i][j].status;
+						cout << endl;
+					}
 					break;
 				};
-				// not completed
-				case Keys::Down: {
-	
-					break;
-				};
-				// not completed
-				case Keys::Left: {
-
-					break;
-				};
-							   // not completed
+				// completed
 				case Keys::Right: {
-
+					if (y < 9 && y >= 0 && ship.isHorisont() == true) {
+						for (int i = 0; i < deck; i++) {
+							if (this->_friendlyShipField[x + i][y + 1].status == 3 || this->_friendlyShipField[x + i][y + 1].status == 4)
+								ship.setShipFieldCellStatus('f', x + i, y + 1, 2);
+							else
+								ship.setShipFieldCellStatus('f', x + i, y + 1, 1);
+							ship.setShipFieldCellStatus('f', x + i, y, 0);
+						}
+						y += 1;
+					}
+					else if (y < 9 && y >= 0 && ship.isHorisont() == false) {
+						if (this->_friendlyShipField[x][y + 1].status == 3 || this->_friendlyShipField[x][y + 1].status == 4)
+							ship.setShipFieldCellStatus('f', x, y + deck, 2);
+						else
+							ship.setShipFieldCellStatus('f', x, y + deck, 1);
+						ship.setShipFieldCellStatus('f', x, y, 0);
+						y += 1;
+					}
+					this->drawFields();
+					ship.showFields(this->_friendlyShipField);
+					for (int i = 0; i < 10; i++) {
+						for (int j = 0; j < 10; j++)
+							cout << ship._friendlyShipField[i][j].status;
+						cout << endl;
+					}
+					cout << endl << y << endl;
+					for (int i = 0; i < 10; i++) {
+						for (int j = 0; j < 10; j++)
+							cout << this->_friendlyShipField[i][j].status;
+						cout << endl;
+					}
 					break;
 				};
-								// not completed
+				// completed
+				case Keys::Down: {
+					if (x < 9 && x >= 0 && ship.isHorisont() == true) {
+						if (this->_friendlyShipField[x + 1][y].status == 3 || this->_friendlyShipField[x + 1][y].status == 4)
+							ship.setShipFieldCellStatus('f', x + deck, y, 2);
+						else
+							ship.setShipFieldCellStatus('f', x + deck, y, 1);
+						ship.setShipFieldCellStatus('f', x, y, 0);
+						x += 1;
+					}
+					else if (x < 9 && x >= 0 && ship.isHorisont() == false) {
+						for (int i = 0; i < deck; i++) {
+							if (this->_friendlyShipField[x + 1][y + i].status == 3 || this->_friendlyShipField[x + 1][y + i].status == 4)
+								ship.setShipFieldCellStatus('f', x + 1, y + i, 2);
+							else
+								ship.setShipFieldCellStatus('f', x + 1, y + i, 1);
+							ship.setShipFieldCellStatus('f', x, y + i, 0);
+						}
+						x += 1;
+					}
+					this->drawFields();
+					ship.showFields(this->_friendlyShipField);
+					for (int i = 0; i < 10; i++) {
+						for (int j = 0; j < 10; j++)
+							cout << ship._friendlyShipField[i][j].status;
+						cout << endl;
+					}
+					cout << endl << y << endl;
+					for (int i = 0; i < 10; i++) {
+						for (int j = 0; j < 10; j++)
+							cout << this->_friendlyShipField[i][j].status;
+						cout << endl;
+					}
+					break;
+				};
+				// completed
+				case Keys::Up: {
+					if (x > 0 && x < 10 && ship.isHorisont() == true) {
+						if (this->_friendlyShipField[x - 1][y].status == 3 || this->_friendlyShipField[x - 1][y].status == 4)
+							ship.setShipFieldCellStatus('f', x - 1, y, 2);
+						else
+							ship.setShipFieldCellStatus('f', x - 1, y, 1);
+						ship.setShipFieldCellStatus('f', x + deck - 1, y, 0);
+						x -= 1;
+					}
+					else if (x > 0 && x < 10 && ship.isHorisont() == false) {
+						for (int i = 0; i < deck; i++) {
+							if (this->_friendlyShipField[x - 1][y + i].status == 3 || this->_friendlyShipField[x - 1][y + i].status == 4)
+								ship.setShipFieldCellStatus('f', x - 1, y + i, 2);
+							else
+								ship.setShipFieldCellStatus('f', x - 1, y + i, 1);
+							ship.setShipFieldCellStatus('f', x, y + i, 0);
+						}
+						x -= 1;
+					}
+					this->drawFields();
+					ship.showFields(this->_friendlyShipField);
+					for (int i = 0; i < 10; i++) {
+						for (int j = 0; j < 10; j++)
+							cout << ship._friendlyShipField[i][j].status;
+						cout << endl;
+					}
+					cout << endl << y;
+					cout << endl;
+					for (int i = 0; i < 10; i++) {
+						for (int j = 0; j < 10; j++)
+							cout << this->_friendlyShipField[i][j].status;
+						cout << endl;
+					}
+					break;
+				};
+				//  completed
 				case Keys::Enter: {
 					if (ship.checkFields('f') == true) {
-						if (ship.isHorisont() == false) {
+						if (ship.isHorisont() == true) {
 							for (int i = 0; i < deck; i++)
 								this->_friendlyShipField[x + i][y].status = 3;
 							if (x != 0) {
@@ -236,7 +358,7 @@ void Field::setFieldManually() {
 									this->_friendlyShipField[x + i][y + 1].status = 4;
 								}
 						}
-						else if (ship.isHorisont() == true) {
+						else if (ship.isHorisont() == false) {
 							for (int i = 0; i < deck; i++)
 								this->_friendlyShipField[x][y+i].status = 3;
 							if (x != 0)
@@ -263,8 +385,16 @@ void Field::setFieldManually() {
 							}
 						}
 						set == true;
+						if (count == 1 && deck == 4)
+							deck--;
+						if (count == 2 && deck == 3)
+							deck--;
+						if (count == 3 && deck == 2)
+							deck--;
+						if (count == 4 && deck == 1)
+							deck--;
 						this->drawFields();
-						ship.showFields();
+						ship.showFields(this->_friendlyShipField);
 						for (int i = 0; i < 10; i++) {
 							for (int j = 0; j < 10; j++)
 								cout << ship._friendlyShipField[i][j].status;
@@ -295,9 +425,17 @@ void Field::setShipFieldCellStatus(char type, int x, int y, int stat) {
 		this->_enemyShipField[x][y].status = stat;
 }
 
-void Field::showFields() {
+void Field::showFields(Coords field[10][10]) {
 	for (int i = 0; i < 10; i++)
 		for (int j = 0; j < 10; j++) {
+			if (field[i][j].getStatus() == 4) {
+				gotoxy(j + 1, i + 1);
+				cout << "O";
+			}
+			if (field[i][j].getStatus() == 3) {
+				gotoxy(j + 1, i + 1);
+				cout << "D";
+			}
 			if (_friendlyShipField[i][j].status == 0) {
 				gotoxy(j + 1, i + 1);
 				cout << " ";
@@ -358,4 +496,3 @@ void gotoxy(int xpos, int ypos)
 
 	SetConsoleCursorPosition(hOuput, scrn);
 }
-
