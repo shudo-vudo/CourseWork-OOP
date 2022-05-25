@@ -114,13 +114,12 @@ bool Field::checkFields(char type) {
 
 void Field::setFieldManually() {
 	int deck = 4;
-	int count = 0;
+	int count = 1;
 	int tmp = 0;
-	while (deck!=0) {
+	while (count < 10) {
 		int x = 0;
 		int y = 0;
 		bool set = false;
-		count += 1;
 		Ship ship(deck);
 		this->drawFields();
 		for (int i = 0; i < deck; i++)
@@ -235,7 +234,7 @@ void Field::setFieldManually() {
 						}
 						y += 1;
 					}
-					else if (y < 9 && y >= 0 && ship.isHorisont() == false) {
+					else if (y < 10 - deck && y >= 0 && ship.isHorisont() == false) {
 						if (this->_friendlyShipField[x][y + 1].status == 3 || this->_friendlyShipField[x][y + 1].status == 4)
 							ship.setShipFieldCellStatus('f', x, y + deck, 2);
 						else
@@ -260,7 +259,7 @@ void Field::setFieldManually() {
 				};
 				// completed
 				case Keys::Down: {
-					if (x < 9 && x >= 0 && ship.isHorisont() == true) {
+					if (x < 10 - deck && x >= 0 && ship.isHorisont() == true) {
 						if (this->_friendlyShipField[x + 1][y].status == 3 || this->_friendlyShipField[x + 1][y].status == 4)
 							ship.setShipFieldCellStatus('f', x + deck, y, 2);
 						else
@@ -387,12 +386,13 @@ void Field::setFieldManually() {
 						set == true;
 						if (count == 1 && deck == 4)
 							deck--;
-						if (count == 2 && deck == 3)
+						else if (count == 3)
 							deck--;
-						if (count == 3 && deck == 2)
+						else if (count == 6)
 							deck--;
-						if (count == 4 && deck == 1)
+						else if (count == 10)
 							deck--;
+						count++;
 						this->drawFields();
 						ship.showFields(this->_friendlyShipField);
 						for (int i = 0; i < 10; i++) {
