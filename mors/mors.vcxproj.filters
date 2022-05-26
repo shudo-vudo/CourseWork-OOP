@@ -21,9 +21,12 @@
     <ClCompile Include="GameField.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="GamePlay.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GameField.h">
+    <ClInclude Include="Game.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

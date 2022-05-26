@@ -1,4 +1,4 @@
-#include "GameField.h"
+#include "Game.h"
 
 Coords::Coords() {
 	this->status = 0;
@@ -16,12 +16,7 @@ int Coords::getStatus() {
 	return this->status;
 }
 
-Game::Game()
-{
-	_end = false;
-}
-
-Field::Field() : Game() {
+Field::Field() {
 	for (int i = 0; i < 10; i++)
 		for (int j = 0; j < 10; j++) {
 			_friendlyShipField[i][j].x = i;
@@ -121,7 +116,6 @@ void Field::showtempFields(int choose) {
 		}
 	gotoxy(0, 12);
 }
-
 
 bool Field::checkFields(char type) {
 	if (type == 'f')
@@ -627,6 +621,18 @@ void Field::setFieldRandomly(char type) {
 		}
 	} while (this->checkRandom(type) == false);
 }
+}
+
+void Field::setFieldsForGame() {
+	for (int i = 0; i < 10; i++)
+		for (int j = 0; j < 10; j++) {
+			if (this->_enemyShipField[i][j].status == 3)
+				this->_enemyShipField[i][j].status = 5;
+			if (this->_enemyShipField[i][j].status == 6)
+				this->_enemyShipField[i][j].status = 4;
+			if (this->_friendlyShipField[i][j].status == 6)
+				this->_friendlyShipField[i][j].status = 4;
+		}
 }
 
 Ship::Ship() : Field() {

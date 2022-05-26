@@ -1,5 +1,5 @@
-#ifndef GAMEFIELD_H
-#define GAMEFIELD_H
+#ifndef GAME_H
+#define GAME_H
 
 #include <iostream>
 #include <conio.h>
@@ -34,14 +34,8 @@ struct Coords {
 		6 - empty visible cell near ship
 */
 
-class Game {
-protected:
-	bool _end;
-public:
-	Game();
-};
 
-class Field : public Game {
+class Field {
 protected:
 	Coords _friendlyShipField[10][10];
 	Coords _enemyShipField[10][10];
@@ -55,6 +49,7 @@ public:
 	bool checkRandom(char);
 	void setFieldManually();
 	void setFieldRandomly(char);
+	void setFieldsForGame();
 };
 
 class Ship : public Field {
@@ -69,5 +64,14 @@ public:
 	int getShipDeck();
 };
 void gotoxy(int, int);
+
+class Game : public Field {
+protected:
+	bool _end;
+public:
+	Game();
+	void shoot(char, int, int);
+	void markDeadShip();
+};
 
 #endif 

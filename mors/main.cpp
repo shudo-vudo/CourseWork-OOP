@@ -1,4 +1,4 @@
-﻿#include "GameField.h"
+﻿#include "Game.h"
 
 int main()
 {
@@ -6,7 +6,7 @@ int main()
     // proverka vsego
     /*gotoxy(50, 50);
     cout << char(210);*/
-    Field game;
+    Game game;
     game.drawFields();
     sleep_for(seconds(1));
     cout << endl << "        MORSKOI BOI             ";
@@ -166,5 +166,7 @@ int main()
         }
     }
     //next phase
+    game.setFieldRandomly('e');
+    game.setFieldsForGame();
 
 }
