@@ -9,6 +9,8 @@
 #include <thread>
 
 using namespace std;
+using namespace this_thread;
+using namespace chrono;
 
 enum Keys { Up = 72, Left = 75, Right = 77, Down = 80, Enter = 13, Esc = 27, BackSpace = 8, Q = 113 };
 

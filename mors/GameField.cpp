@@ -1,7 +1,5 @@
 #include "GameField.h"
 
-// this is square: char(219);
-
 Coords::Coords() {
 	this->status = 0;
 	this->x = 0;
@@ -16,6 +14,11 @@ Coords::Coords(int xc, int yc, int stat) {
 
 int Coords::getStatus() {
 	return this->status;
+}
+
+Game::Game()
+{
+	_end = false;
 }
 
 Field::Field() : Game() {
@@ -189,6 +192,7 @@ void Field::setFieldManually() {
 		}
 		this->showtempFields(1);
 		ship.showtempFields(0);
+		cout << endl << "For moving ship, press 'Q'.               ";
 		while (set != true) {
 			switch (_getch()) {
 				// good
@@ -223,8 +227,13 @@ void Field::setFieldManually() {
 					}
 					this->showtempFields(1);
 					ship.showtempFields(0);
-					if (QIsPressed == false)
+					if (QIsPressed == false) {
 						QIsPressed = true;
+						this->drawFields();
+						this->showtempFields(1);
+						ship.showtempFields(0);
+						cout << endl << "For place ship press 'Enter'.              ";
+					}
 					break;
 				}
 				// completed
@@ -391,6 +400,8 @@ void Field::setFieldManually() {
 							count++;
 							this->showtempFields(1);
 							ship.showtempFields(0);
+							cout << endl << "        Placed!                ";
+							sleep_for(milliseconds(500));
 						}
 						break;
 					};
@@ -616,11 +627,6 @@ void Field::setFieldRandomly(char type) {
 		}
 	} while (this->checkRandom(type) == false);
 }
-}
-
-Game::Game()
-{
-	_end = false;
 }
 
 Ship::Ship() : Field() {
