@@ -5,6 +5,8 @@
 #include <conio.h>
 #include <random>
 #include <Windows.h>
+#include <chrono>
+#include <thread>
 
 using namespace std;
 
@@ -48,6 +50,7 @@ public:
 	void showtempFields(int);
 	bool checkFields(char);
 	void clearFields(char);
+	bool checkRandom(char);
 	void setFieldManually();
 	void setFieldRandomly(char);
 };
