@@ -27,6 +27,7 @@ struct Coords {
 		3 - Deck;
 		4 - empty cell near ship;
 		5 - Hidden deck;
+		6 - empty visible cell near ship
 */
 
 class Game {
@@ -44,10 +45,11 @@ public:
 	Field();
 	void setShipFieldCellStatus(char,int,int,int);
 	void drawFields();
-	void showFields(Coords field[10][10]);
+	void showtempFields(int);
 	bool checkFields(char);
+	void clearFields(char);
 	void setFieldManually();
-	void setFieldRandomly();
+	void setFieldRandomly(char);
 };
 
 class Ship : public Field {
@@ -56,7 +58,7 @@ protected:
 	int _deck;
 public:
 	Ship();
-	Ship(int);
+	Ship(int, bool);
 	bool isHorisont();
 	void swap();
 	int getShipDeck();
