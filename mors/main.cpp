@@ -168,5 +168,43 @@ int main()
     //next phase
     game.setFieldRandomly('e');
     game.setFieldsForGame();
+    gotoxy(0, 15);
+    cout << "        Let's go!";
+    sleep_for(seconds(2));
+    char turn = 'f';
+    int x = 0;
+    int y = 0;
+    while (game.isEnd() == false) {
+        switch (turn)
+        {
+        case 'f': {
+            gotoxy(0, 15);
+            cout << "        Your turn! Select cell for shoot.                 ";
+            while (true) {
+                if (game.shoot('f') == false) {
+                    turn = 'e';
+                    gotoxy(0, 15);
+                    cout << "        MISS                                                      ";
+                    sleep_for(seconds(1));
+                    break;
+                }
+                else {
+                    gotoxy(0, 15);
+                    cout << "        HIT!                                                      ";
+                    sleep_for(seconds(1));
+                }
+            }
+            break;
+        }
+        case 'e': {
+            gotoxy(0, 15);
+            cout << "        Enemy turn!                                           ";
+            sleep_for(seconds(1));
 
+            game.shoot('e');
+            turn = 'f';
+            break;
+        }
+        }
+    }
 }

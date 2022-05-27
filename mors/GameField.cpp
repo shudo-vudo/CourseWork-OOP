@@ -67,7 +67,7 @@ void Field::drawFields() {
 					cout << "X";
 				else if (_enemyShipField[i][j - 16].status == 2)
 					cout << "O";
-				else if (_enemyShipField[i][j - 16].status > 3 && _enemyShipField[i][j - 16].status < 5) {
+				else if (_enemyShipField[i][j - 16].status == 3) {
 					cout << char(219);
 				}
 				else
@@ -113,8 +113,40 @@ void Field::showtempFields(int choose) {
 					cout << "X";
 				}
 			}
+			else if (choose == 3) {
+				if (_friendlyShipField[i][j].status == 3) {
+					gotoxy(j + 1, i + 1);
+					cout << char(219);
+				}
+				else if (_friendlyShipField[i][j].status == 0) {
+					gotoxy(j + 1, i + 1);
+					cout << " ";
+				}
+				else if (_friendlyShipField[i][j].status == 2) {
+					gotoxy(j + 1, i + 1);
+					cout << "O";
+				}
+			}
 		}
 	gotoxy(0, 12);
+}
+
+void Field::showEnemyField() {
+	for (int i = 0; i < 10; i++)
+		for (int j = 0; j < 10; j++) {
+			if (_enemyShipField[i][j].status == 1) {
+				gotoxy(i + 16, j + 1);
+				cout << "X";
+			}
+			else if (_enemyShipField[i][j].status == 2) {
+				gotoxy(i + 16, j + 1);
+				cout << "O";
+			}
+			else {
+				gotoxy(i + 16, j + 1);
+				cout << " ";
+			}
+		}
 }
 
 bool Field::checkFields(char type) {
