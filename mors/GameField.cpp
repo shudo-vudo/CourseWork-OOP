@@ -35,6 +35,10 @@ void Field::setShipFieldCellStatus(char type, int x, int y, int stat) {
 		this->_enemyShipField[x][y].status = stat;
 }
 
+int Field::getStatus(int x, int y) {
+	return this->_friendlyShipField[x][y].status;
+}
+
 void Field::drawFields() {
 	system("cls");
 	cout << " ";
@@ -90,41 +94,45 @@ void Field::showtempFields(int choose) {
 	for (int i = 0; i < 10; i++)
 		for (int j = 0; j < 10; j++) {
 			if (choose == 1) {
-				if (_friendlyShipField[i][j].status == 3) {
+				if (getStatus(i, j) == 3) {
 					gotoxy(j + 1, i + 1);
 					cout << "D";
 				}
-				if (_friendlyShipField[i][j].status == 6) {
+				if (getStatus(i, j) == 6) {
 					gotoxy(j + 1, i + 1);
 					cout << " ";
 				}
-				if (_friendlyShipField[i][j].status == 0) {
+				if (getStatus(i, j) == 0) {
 					gotoxy(j + 1, i + 1);
 					cout << " ";
 				}
 			}
 			else if (choose == 0) {
-				if (_friendlyShipField[i][j].status == 1) {
+				if (getStatus(i, j) == 1) {
 					gotoxy(j + 1, i + 1);
 					cout << char(219);
 				}
-				else if (_friendlyShipField[i][j].status == 2) {
+				else if (getStatus(i, j) == 2) {
 					gotoxy(j + 1, i + 1);
 					cout << "X";
 				}
 			}
 			else if (choose == 3) {
-				if (_friendlyShipField[i][j].status == 3) {
+				if (getStatus(i, j) == 3) {
 					gotoxy(j + 1, i + 1);
 					cout << char(219);
 				}
-				else if (_friendlyShipField[i][j].status == 0) {
+				else if (getStatus(i,j) == 0) {
 					gotoxy(j + 1, i + 1);
 					cout << " ";
 				}
-				else if (_friendlyShipField[i][j].status == 2) {
+				else if (getStatus(i, j) == 2) {
 					gotoxy(j + 1, i + 1);
 					cout << "O";
+				}
+				else if (getStatus(i, j) == 1) {
+					gotoxy(j + 1, i + 1);
+					cout << "X";
 				}
 			}
 		}
@@ -663,7 +671,7 @@ void Field::setFieldsForGame() {
 			if (this->_enemyShipField[i][j].status == 6)
 				this->_enemyShipField[i][j].status = 4;
 			if (this->_friendlyShipField[i][j].status == 6)
-				this->_friendlyShipField[i][j].status = 4;
+				this->_friendlyShipField[i][j].status = 0;
 		}
 }
 

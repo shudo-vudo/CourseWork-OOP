@@ -192,6 +192,8 @@ int main()
                     gotoxy(0, 15);
                     cout << "        HIT!                                                      ";
                     sleep_for(seconds(1));
+                    gotoxy(0, 15);
+                    cout << "        Your turn! Select cell for shoot.                 ";
                 }
             }
             break;
@@ -200,10 +202,23 @@ int main()
             gotoxy(0, 15);
             cout << "        Enemy turn!                                           ";
             sleep_for(seconds(1));
-
-            game.shoot('e');
-            turn = 'f';
-            break;
+            while (true) {
+                if (game.shoot('e') == false) {
+                    turn = 'f';
+                    gotoxy(0, 15);
+                    cout << "        ENEMY MISSES                                                  ";
+                    sleep_for(seconds(1));
+                    break;
+                }
+                else {
+                    gotoxy(0, 15);
+                    cout << "        HIT!                                                      ";
+                    sleep_for(seconds(1));
+                    gotoxy(0, 15);
+                    cout << "        Enemy turn!                                           ";
+                    sleep_for(seconds(1));
+                }
+            }
         }
         }
     }

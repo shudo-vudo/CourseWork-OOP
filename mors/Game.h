@@ -15,7 +15,8 @@ using namespace this_thread;
 using namespace chrono;
 
 enum Keys { Up = 72, Left = 75, Right = 77, Down = 80, Enter = 13, Esc = 27, BackSpace = 8, Q = 113 };
-enum Direction { Up = 'U', Left = 'L', Right = 'R', Down = 'D' };
+
+enum Direction { U = 0, L = 1, R = 2, D = 3 };
 
 struct Coords {
 	int x;
@@ -52,6 +53,7 @@ protected:
 	Coords _enemyShipField[10][10];
 	Field();
 	void setShipFieldCellStatus(char, int, int, int);
+	int getStatus(int, int);
 public:
 	void drawFields();
 	void showtempFields(int);
@@ -80,15 +82,19 @@ void gotoxy(int, int);
 class Game : public Field {
 private:
 	bool _end;
-	vector<Coord> _tempAICells;
+	int _wasDirection[4];
+	Coord _tempAICells[2];
 	vector<Coord> _tempDeadShip;
 	bool _AIwork;
 public:
 	Game();
+	void AIChooseDirection(int, int);
 	bool isEnd();
 	bool shoot(char);
 	bool isDeadShip(int, int);
-	bool isDeadShip(int, int, char);
+	bool isDeadShip(int, int, int);
+	bool isEnemyDeadShip(int, int);
+	bool isEnemyDeadShip(int, int, int);
 	void markDeadShip();
 };
 
