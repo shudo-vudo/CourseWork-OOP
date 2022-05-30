@@ -17,51 +17,57 @@ Game::Game() : Field() {
 	}
 	_end = false;
 	_AIwork = false;
+	_isTurned = false;
+	_tempDeadShip.resize(0);
+	for (int i = 0; i < 4; i++) {
+		_wasDirection[i] = 0;
+	}
 }
 
 bool Game::isEnd() {
 	return _end;
 }
 
-bool Game::isEnemyDeadShip(int, int)
-{
+bool Game::isEnemyDeadShip(int, int) {
+
 	return false;
 }
 
-bool Game::isEnemyDeadShip(int, int, int)
-{
+bool Game::isEnemyDeadShip(int, int, int) {
+
 	return false;
 }
 
 void Game::markDeadShip() {
 	int x = 0;
 	int y = 0;
+	_tempDeadShip.shrink_to_fit();
 	for (int i = 0; i < _tempDeadShip.capacity(); i++) {
 		x = _tempDeadShip[i].x;
 		y = _tempDeadShip[i].y;
 		for (int j = 0; j < 3; j++) {
-			if (this->getStatus(x - 1 + i, y - 1) != 1)
-				_friendlyShipField[x - 1 + i][y - 1].status = 2;
+			if ((this->getStatus(abs(x - 1 + j), abs(y - 1)) == 2 || this->getStatus(abs(x - 1 + j), abs(y - 1)) == 0) && (x - 1 + j < 10))
+				_friendlyShipField[abs(x - 1 + j)][abs(y - 1)].status = 2;
 		}
 		for (int j = 0; j < 3; j++) {
-			if (this->getStatus(x - 1 + i, y + 1) != 1)
-				_friendlyShipField[x - 1 + i][y + 1].status = 2;
+			if ((this->getStatus(abs(x - 1 + j), y + 1) == 2 || this->getStatus(abs(x - 1 + j), abs(y + 1)) == 0) && (x - 1 + j < 10) && (y + 1 < 10))
+				_friendlyShipField[abs(x - 1 + j)][y + 1].status = 2;
 		}
-		if (this->getStatus(x - 1, y) != 1) {
-			_friendlyShipField[x - 1][y].status = 2;
+		if (this->getStatus(abs(x - 1), y) == 2 || this->getStatus(abs(x - 1), y) == 0) {
+			_friendlyShipField[abs(x - 1)][y].status = 2;
 		}
-		if (this->getStatus(x + 1, y) != 1) {
+		if ((this->getStatus(abs(x + 1), y) == 2 || this->getStatus(abs(x + 1), y) == 0) && (x + 1 < 10)) {
 			_friendlyShipField[x + 1][y].status = 2;
 		}
 	}
 	_tempDeadShip.clear();
-	_tempDeadShip.resize(0);
+	_tempDeadShip.shrink_to_fit();
 }
-
 
 bool Game::shoot(char type) {
 	int x = 0;
 	int y = 0;
+	bool choosenDirection = false;
 	Point projectile;
 	projectile.tempfield[0][0] = 1;
 	if (type == 'f') {
@@ -134,14 +140,16 @@ bool Game::shoot(char type) {
 				else if (this->_friendlyShipField[x][y].status == 3) {
 					this->_friendlyShipField[x][y].status = 1;
 					_AIwork = true;
+					Coord temp(x, y);
+					_tempDeadShip.push_back(temp);
 					if (isDeadShip(x, y) == true) {
 						_AIwork = false;
 						this->markDeadShip();
 					}
 					else {
-						_tempDeadShip.clear();
-						_tempDeadShip.resize(0);
-						AIChooseDirection(x, y);
+						this->_tempAICells[0].x = x;
+						this->_tempAICells[0].y = y;
+						AIChooseDirection(this->_tempAICells[0].x, this->_tempAICells[0].y);
 					}
 					this->showtempFields(3);
 					return true;
@@ -168,13 +176,15 @@ bool Game::shoot(char type) {
 				}
 				else if (this->_friendlyShipField[x][y].status == 3) {
 					this->_friendlyShipField[x][y].status = 1;
+					Coord temp(x, y);
+					_tempDeadShip.push_back(temp);
 					if (isDeadShip(_tempAICells[0].x, _tempAICells[0].y) == true) {
 						_AIwork = false;
 						this->markDeadShip();
+						for (int i = 0; i < 4; i++)
+							_wasDirection[i] = 0;
 					}
 					else {
-						_tempDeadShip.clear();
-						_tempDeadShip.resize(0);
 						int cont = 5;
 						for (int i = 0; i < 4; i++)
 							if (this->_wasDirection[i] == 2) {
@@ -245,11 +255,10 @@ bool Game::shoot(char type) {
 }
 
 void Game::AIChooseDirection(int x, int y) {
-	this->_tempAICells[0].x = x;
-	this->_tempAICells[0].y = y;
 	bool choosen = false;
+	int random = 0;
 	while (choosen != true) {
-		int random = rand() % 4;
+		random = rand() % 4;
 		switch (random) {
 		case Direction::U: {
 			if (y != 0) {
@@ -300,46 +309,44 @@ void Game::AIChooseDirection(int x, int y) {
 }
 
 bool Game::isDeadShip(int x, int y) {
-	Coord temp = Coord(x, y);
-	_tempDeadShip.clear();
-	_tempDeadShip.push_back(temp);
 	int good = 0;
-	if ((this->getStatus(abs(x + 1),y) == 0 || this->getStatus(abs(x + 1), y) == 2)
-		&& (this->getStatus(x, abs(y + 1)) == 0 || this->getStatus(x, abs(y + 1)) == 2)
+	_isTurned = false;
+	if ((this->getStatus(x + 1, y) == 0 || this->getStatus(x + 1, y) == 2 || (x + 1 > 9))
+		&& (this->getStatus(x, y + 1) == 0 || this->getStatus(x, y + 1) == 2 || (x + 1 > 9))
 		&& (this->getStatus(abs(x - 1), y) == 0 || this->getStatus(abs(x - 1), y) == 2)
 		&& (this->getStatus(x, abs(y - 1)) == 0 || this->getStatus(x, abs(y - 1)) == 2)) {
 		return true;
 	}
 	if (x != 0)
 		if (this->getStatus(x - 1, y) == 1) {
-			if (this->isDeadShip(x - 1, y, Direction::L) == true)
+			if (this->isDeadShip(x, y, Direction::L) == true)
 				good = 1;
 		}
-		else if (this->getStatus(x + 1, y) == 3 && x != 9) {
+		if (this->getStatus(x + 1, y) == 3 && x != 9 && this->isDeadShip(x, y, Direction::R) == false) {
 			return false;
 		}
 	if (x != 9)
 		if (this->getStatus(x + 1, y) == 1) {
-			if (this->isDeadShip(x + 1, y, Direction::R) == true)
+			if (this->isDeadShip(x, y, Direction::R) == true)
 				good = 1;
 		}
-		else if (this->getStatus(x - 1, y) == 3 && x != 0) {
+		if (this->getStatus(x - 1, y) == 3 && x != 0 && this->isDeadShip(x, y, Direction::L) == false) {
 			return false;
 		}
 	if (y != 0)
 		if (this->getStatus(x, y - 1) == 1) {
-			if (this->isDeadShip(x, y - 1, Direction::U) == true)
+			if (this->isDeadShip(x, y, Direction::U) == true)
 				good = 1;
 		}
-		else if (this->getStatus(x, y + 1) == 3 && y!= 9) {
+		if (this->getStatus(x, y + 1) == 3 && y!= 9 && this->isDeadShip(x, y, Direction::D) == false) {
 			return false;
 		}
 	if (y != 9)
 		if (this->getStatus(x, y + 1) == 1) {
-			if (this->isDeadShip(x, y + 1, Direction::D) == true)
+			if (this->isDeadShip(x, y, Direction::D) == true)
 				good = 1;
 		}
-		else if (this->getStatus(x, y - 1) == 3 && y != 0) {
+		if (this->getStatus(x, y - 1) == 3 && y != 0 && this->isDeadShip(x, y, Direction::U) == false) {
 			return false;
 		}
 	if (good == 1)
@@ -349,13 +356,22 @@ bool Game::isDeadShip(int x, int y) {
 }
 
 bool Game::isDeadShip(int x, int y, int direction) {
-	Coord temp = Coord(x, y);
-	_tempDeadShip.push_back(temp);
 	switch (direction) {
 	case Direction::L: {
 		if (x != 0) {
-			if (_friendlyShipField[x - 1][y].status == 0 || _friendlyShipField[x - 1][y].status == 2)
-				return true;
+			if (_friendlyShipField[x - 1][y].status == 0 || _friendlyShipField[x - 1][y].status == 2) {
+				if (x != 9 && _isTurned == false) {
+					_isTurned = true;
+					if (_friendlyShipField[this->_tempAICells[0].x + 1][this->_tempAICells[0].y].status == 0 || _friendlyShipField[this->_tempAICells[0].x + 1][this->_tempAICells[0].y].status == 2)
+						return true;
+					if (this->isDeadShip(this->_tempAICells[0].x + 1, this->_tempAICells[0].y, Direction::R) == true)
+						return true;
+					else
+						return false;
+				}
+				else
+					return true;
+			}
 			else if (_friendlyShipField[x - 1][y].status == 3)
 				return false;
 			else if (_friendlyShipField[x - 1][y].status == 1)
@@ -368,8 +384,19 @@ bool Game::isDeadShip(int x, int y, int direction) {
 	}
 	case Direction::R: {
 		if (x != 9) {
-			if (_friendlyShipField[x + 1][y].status == 0 || _friendlyShipField[x + 1][y].status == 2)
-				return true;
+			if (_friendlyShipField[x + 1][y].status == 0 || _friendlyShipField[x + 1][y].status == 2) {
+				if (x != 0 && _isTurned == false) {
+					_isTurned = true;
+					if (_friendlyShipField[this->_tempAICells[0].x - 1][this->_tempAICells[0].y].status == 0 || _friendlyShipField[this->_tempAICells[0].x - 1][this->_tempAICells[0].y].status == 2)
+						return true;
+					if (this->isDeadShip(this->_tempAICells[0].x - 1, this->_tempAICells[0].y, Direction::L) == true)
+						return true;
+					else
+						return false;
+				}
+				else
+					return true;
+			}
 			else if (_friendlyShipField[x + 1][y].status == 3)
 				return false;
 			else if (this->_friendlyShipField[x + 1][y].status == 1)
@@ -382,8 +409,19 @@ bool Game::isDeadShip(int x, int y, int direction) {
 	}
 	case Direction::U: {
 		if (y != 0) {
-			if (_friendlyShipField[x][y - 1].status == 0 || _friendlyShipField[x][y - 1].status == 2)
-				return true;
+			if (_friendlyShipField[x][y - 1].status == 0 || _friendlyShipField[x][y - 1].status == 2) {
+				if (y != 9 && _isTurned == false) {
+					_isTurned = true;
+					if (_friendlyShipField[this->_tempAICells[0].x][this->_tempAICells[0].y + 1].status == 0 || _friendlyShipField[this->_tempAICells[0].x][this->_tempAICells[0].y + 1].status == 2)
+						return true;
+					if (this->isDeadShip(this->_tempAICells[0].x, this->_tempAICells[0].y + 1, Direction::D) == true)
+						return true;
+					else
+						return false;
+				}
+				else
+					return true;
+			}
 			else if (_friendlyShipField[x][y - 1].status == 3)
 				return false;
 			else if (this->_friendlyShipField[x][y - 1].status == 1)
@@ -396,8 +434,19 @@ bool Game::isDeadShip(int x, int y, int direction) {
 	}
 	case Direction::D: {
 		if (y != 9) {
-			if (_friendlyShipField[x][y + 1].status == 0 || _friendlyShipField[x][y + 1].status == 2)
-				return true;
+			if (_friendlyShipField[x][y + 1].status == 0 || _friendlyShipField[x][y + 1].status == 2) {
+				if (y != 0 && _isTurned == false) {
+					_isTurned = true;
+					if (_friendlyShipField[this->_tempAICells[0].x][this->_tempAICells[0].y - 1].status == 0 || _friendlyShipField[this->_tempAICells[0].x][this->_tempAICells[0].y - 1].status == 2)
+						return true;
+					if (this->isDeadShip(this->_tempAICells[0].x, this->_tempAICells[0].y - 1, Direction::U) == true)
+						return true;
+					else
+						return false;
+				}
+				else
+					return true;
+			}
 			else if (_friendlyShipField[x][y + 1].status == 3)
 				return false;
 			else if (this->_friendlyShipField[x][y + 1].status == 1)

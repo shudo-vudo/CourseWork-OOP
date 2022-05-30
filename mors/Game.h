@@ -86,6 +86,7 @@ private:
 	Coord _tempAICells[2];
 	vector<Coord> _tempDeadShip;
 	bool _AIwork;
+	bool _isTurned;
 public:
 	Game();
 	void AIChooseDirection(int, int);
