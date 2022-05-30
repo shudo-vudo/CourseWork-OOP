@@ -54,6 +54,7 @@ protected:
 	Field();
 	void setShipFieldCellStatus(char, int, int, int);
 	int getStatus(int, int);
+	int getEnemyStatus(int, int);
 public:
 	void drawFields();
 	void showtempFields(int);
@@ -85,18 +86,21 @@ private:
 	int _wasDirection[4];
 	Coord _tempAICells[2];
 	vector<Coord> _tempDeadShip;
+	vector<Coord> _tempDeadFriendlyShip;
 	bool _AIwork;
 	bool _isTurned;
 public:
 	Game();
+	char whoIsWinner();
 	void AIChooseDirection(int, int);
 	bool isEnd();
 	bool shoot(char);
+	void markFriendlyDeadShip();
+	void markEnemyDeadShip();
 	bool isDeadShip(int, int);
 	bool isDeadShip(int, int, int);
 	bool isEnemyDeadShip(int, int);
-	bool isEnemyDeadShip(int, int, int);
-	void markDeadShip();
+	void End();
 };
 
 struct Point {

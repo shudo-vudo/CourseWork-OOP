@@ -171,7 +171,7 @@ int main()
     gotoxy(0, 15);
     cout << "        Let's go!";
     sleep_for(seconds(2));
-    char turn = 'e'; //
+    char turn = 'f';
     int x = 0;
     int y = 0;
     while (game.isEnd() == false) {
@@ -204,16 +204,16 @@ int main()
             sleep_for(seconds(1));
             while (true) {
                 if (game.shoot('e') == false) {
-                    turn = 'e'; //
+                    turn = 'f'; //
                     gotoxy(0, 15);
                     cout << "        ENEMY MISSES                                                  ";
-                    //sleep_for(seconds(1));
+                    sleep_for(seconds(1));
                     break;
                 }
                 else {
                     gotoxy(0, 15);
                     cout << "        HIT!                                                      ";
-                    //sleep_for(seconds(1));
+                    sleep_for(seconds(1));
                     gotoxy(0, 15);
                     cout << "        Enemy turn!                                           ";
                     sleep_for(seconds(1));
@@ -221,5 +221,18 @@ int main()
             }
         }
         }
+        char winner = game.whoIsWinner();
+        if (winner == 'f') {
+            game.End();
+            gotoxy(0, 15);
+            cout << "WINNER, WINNER, CHICKEN DINNER!!!";
+        }
+        else if (winner == 'e') {
+            game.End();
+            gotoxy(0, 15);
+            cout << "You lost. Good luck next time!";
+        }
     }
+    gotoxy(0, 18);
+    system("pause");
 }

@@ -19,26 +19,135 @@ Game::Game() : Field() {
 	_AIwork = false;
 	_isTurned = false;
 	_tempDeadShip.resize(0);
+	_tempDeadFriendlyShip.resize(0);
 	for (int i = 0; i < 4; i++) {
 		_wasDirection[i] = 0;
 	}
+}
+
+char Game::whoIsWinner() {
+	int countDeadEnemyDecks = 0;
+	int countDeadFriendlyDecks = 0;
+	for (int i = 0; i < 10; i++)
+		for (int j = 0; j < 10; j++) {
+			if (this->getStatus(i, j) == 1) {
+				countDeadFriendlyDecks++;
+			}
+			if (this->getEnemyStatus(i, j) == 1) {
+				countDeadEnemyDecks++;
+			}
+		}
+	if (countDeadEnemyDecks == 20)
+		return 'f';
+	else if (countDeadFriendlyDecks == 20)
+		return 'e';
+	else
+		return 'n';
 }
 
 bool Game::isEnd() {
 	return _end;
 }
 
-bool Game::isEnemyDeadShip(int, int) {
-
-	return false;
+bool Game::isEnemyDeadShip(int x, int y) {
+	bool ended = false;
+	_tempDeadFriendlyShip.clear();
+	_tempDeadFriendlyShip.shrink_to_fit();
+	Coord temp(x, y);
+	_tempDeadFriendlyShip.push_back(temp);
+	if ((this->getEnemyStatus(x + 1, y) == 0 || this->getEnemyStatus(x + 1, y) == 2 || (x + 1 > 9))
+		&& (this->getEnemyStatus(x, y + 1) == 0 || this->getEnemyStatus(x, y + 1) == 2 || (x + 1 > 9))
+		&& (this->getEnemyStatus(abs(x - 1), y) == 0 || this->getEnemyStatus(abs(x - 1), y) == 2)
+		&& (this->getEnemyStatus(x, abs(y - 1)) == 0 || this->getEnemyStatus(x, abs(y - 1)) == 2)) {
+		return true;
+	}
+	int i = 1;
+	while (ended != true) {
+		if (x + i < 10) {
+			if (this->getEnemyStatus(x + i, y) == 5) {
+				return false;
+			}
+			else if (this->getEnemyStatus(x + i, y) == 1) {
+				temp.x = x + i;
+				temp.y = y;
+				_tempDeadFriendlyShip.push_back(temp);
+				i++;
+				continue;
+			}
+			else if (this->getEnemyStatus(x + i, y) == 0 || this->getEnemyStatus(x + i, y) == 2)
+				ended = true;
+		}
+		else
+			ended = true;
+		i++;
+	}
+	i = 1;
+	ended = false;
+	while (ended != true) {
+		if (x - i >= 0) {
+			if (this->getEnemyStatus(x - i, y) == 5) {
+				return false;
+			}
+			else if (this->getEnemyStatus(x - i, y) == 1) {
+				temp.x = x - i;
+				temp.y = y;
+				_tempDeadFriendlyShip.push_back(temp);
+				i++;
+				continue;
+			}
+			else if (this->getEnemyStatus(x - i, y) == 0 || this->getEnemyStatus(x - i, y) == 2)
+				ended = true;
+		}
+		else
+			ended = true;
+		i++;
+	}
+	i = 1;
+	ended = false;
+	while (ended != true) {
+		if (y + i < 10) {
+			if (this->getEnemyStatus(x, y + i) == 5) {
+				return false;
+			}
+			else if (this->getEnemyStatus(x, y + i) == 1) {
+				temp.x = x;
+				temp.y = y + i;
+				_tempDeadFriendlyShip.push_back(temp);
+				i++;
+				continue;
+			}
+			else if (this->getEnemyStatus(x, y + i) == 0 || this->getEnemyStatus(x, y + i) == 2)
+				ended = true;
+		}
+		else
+			ended = true;
+		i++;
+	}
+	i = 1;
+	ended = false;
+	while (ended != true) {
+		if (y - i >= 0) {
+			if (this->getEnemyStatus(x, y - i) == 5) {
+				return false;
+			}
+			else if (this->getEnemyStatus(x, y - i) == 1) {
+				temp.x = x;
+				temp.y = y - i;
+				_tempDeadFriendlyShip.push_back(temp);
+				i++;
+				continue;
+			}
+			else if (this->getEnemyStatus(x, y - i) == 0 || this->getEnemyStatus(x, y - i) == 2)
+				ended = true;
+		}
+		else
+			ended = true;
+		i++;
+	}
+	return true;
 }
 
-bool Game::isEnemyDeadShip(int, int, int) {
-
-	return false;
-}
-
-void Game::markDeadShip() {
+void Game::markFriendlyDeadShip() {
 	int x = 0;
 	int y = 0;
 	_tempDeadShip.shrink_to_fit();
@@ -64,6 +173,32 @@ void Game::markDeadShip() {
 	_tempDeadShip.shrink_to_fit();
 }
 
+void Game::markEnemyDeadShip() {
+	int x = 0;
+	int y = 0;
+	_tempDeadFriendlyShip.shrink_to_fit();
+	for (int i = 0; i < _tempDeadFriendlyShip.capacity(); i++) {
+		x = _tempDeadFriendlyShip[i].x;
+		y = _tempDeadFriendlyShip[i].y;
+		for (int j = 0; j < 3; j++) {
+			if ((this->getEnemyStatus(abs(x - 1 + j), abs(y - 1)) == 2 || this->getEnemyStatus(abs(x - 1 + j), abs(y - 1)) == 0) && (x - 1 + j < 10))
+				_enemyShipField[abs(x - 1 + j)][abs(y - 1)].status = 2;
+		}
+		for (int j = 0; j < 3; j++) {
+			if ((this->getEnemyStatus(abs(x - 1 + j), y + 1) == 2 || this->getEnemyStatus(abs(x - 1 + j), abs(y + 1)) == 0) && (x - 1 + j < 10) && (y + 1 < 10))
+				_enemyShipField[abs(x - 1 + j)][y + 1].status = 2;
+		}
+		if (this->getEnemyStatus(abs(x - 1), y) == 2 || this->getEnemyStatus(abs(x - 1), y) == 0) {
+			_enemyShipField[abs(x - 1)][y].status = 2;
+		}
+		if ((this->getEnemyStatus(abs(x + 1), y) == 2 || this->getEnemyStatus(abs(x + 1), y) == 0) && (x + 1 < 10)) {
+			_enemyShipField[x + 1][y].status = 2;
+		}
+	}
+	_tempDeadFriendlyShip.clear();
+	_tempDeadFriendlyShip.shrink_to_fit();
+}
+
 bool Game::shoot(char type) {
 	int x = 0;
 	int y = 0;
@@ -75,7 +210,6 @@ bool Game::shoot(char type) {
 			this->showEnemyField();
 			projectile.showPoint(x, y);
 			gotoxy(0, 15);
-			cout << x;
 			switch (_getch()) {
 			case Keys::Up: {
 				if (y != 0) {
@@ -118,6 +252,10 @@ bool Game::shoot(char type) {
 				else if (this->_enemyShipField[x][y].status == 5) { // got it
 					this->_enemyShipField[x][y].status = 1;
 					this->showEnemyField();
+					if (this->isEnemyDeadShip(x, y) == true) {
+						this->markEnemyDeadShip();
+						this->showEnemyField();
+					}
 					return true;
 				}
 				break;
@@ -144,7 +282,7 @@ bool Game::shoot(char type) {
 					_tempDeadShip.push_back(temp);
 					if (isDeadShip(x, y) == true) {
 						_AIwork = false;
-						this->markDeadShip();
+						this->markFriendlyDeadShip();
 					}
 					else {
 						this->_tempAICells[0].x = x;
@@ -180,7 +318,7 @@ bool Game::shoot(char type) {
 					_tempDeadShip.push_back(temp);
 					if (isDeadShip(_tempAICells[0].x, _tempAICells[0].y) == true) {
 						_AIwork = false;
-						this->markDeadShip();
+						this->markFriendlyDeadShip();
 						for (int i = 0; i < 4; i++)
 							_wasDirection[i] = 0;
 					}
@@ -460,6 +598,9 @@ bool Game::isDeadShip(int x, int y, int direction) {
 	}
 }
 
+void Game::End() {
+	_end = true;
+}
 
 void Point::showPoint(int x, int y) {
 	gotoxy(x + 16, y + 1);

@@ -39,6 +39,10 @@ int Field::getStatus(int x, int y) {
 	return this->_friendlyShipField[x][y].status;
 }
 
+int Field::getEnemyStatus(int x, int y) {
+	return this->_enemyShipField[x][y].status;
+}
+
 void Field::drawFields() {
 	system("cls");
 	cout << " ";
@@ -670,7 +674,7 @@ void Field::setFieldsForGame() {
 			if (this->_enemyShipField[i][j].status == 3)
 				this->_enemyShipField[i][j].status = 5;
 			if (this->_enemyShipField[i][j].status == 6)
-				this->_enemyShipField[i][j].status = 4;
+				this->_enemyShipField[i][j].status = 0;
 			if (this->_friendlyShipField[i][j].status == 6)
 				this->_friendlyShipField[i][j].status = 0;
 		}
