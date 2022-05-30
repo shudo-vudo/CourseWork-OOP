@@ -12,10 +12,6 @@ Coords::Coords(int xc, int yc, int stat) {
 	this->status = stat;
 }
 
-int Coords::getStatus() {
-	return this->status;
-}
-
 Field::Field() {
 	for (int i = 0; i < 10; i++)
 		for (int j = 0; j < 10; j++) {
@@ -708,7 +704,6 @@ void Ship::swap() {
 		_isHorisontal = false;
 }
 
-//function for drawing at console
 void gotoxy(int xpos, int ypos)
 {
 	COORD scrn;

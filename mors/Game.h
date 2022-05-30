@@ -24,7 +24,6 @@ struct Coords {
 	int status;
 	Coords();
 	Coords(int,int,int);
-	int getStatus();
 };
 
 struct Coord {

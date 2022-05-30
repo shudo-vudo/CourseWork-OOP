@@ -165,7 +165,6 @@ int main()
         }
         }
     }
-    //next phase
     game.setFieldRandomly('e');
     game.setFieldsForGame();
     gotoxy(0, 15);
