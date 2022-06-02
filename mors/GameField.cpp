@@ -38,27 +38,11 @@ void Field::drawFields() {
 			if (j == 0 || j == 11 || j == 15 || j == 26)
 				cout << "|";
 			else if (j < 11) {
-				if (_friendlyShipField[i][j - 1] == 1)
-					cout << "X";
-				else if (_friendlyShipField[i][j - 1] == 2)
-					cout << "O";
-				else if (_friendlyShipField[i][j - 1] == 3) {
-					cout << char(219);
-				}
-				else
 					cout << " ";
 			}
 			else if (j > 11 && j < 15)
 				cout << " ";
 			else if (j > 15) {
-				if (_enemyShipField[i][j - 16] == 1)
-					cout << "X";
-				else if (_enemyShipField[i][j - 16] == 2)
-					cout << "O";
-				else if (_enemyShipField[i][j - 16] == 3) {
-					cout << char(219);
-				}
-				else
 					cout << " ";
 			}
 		}
