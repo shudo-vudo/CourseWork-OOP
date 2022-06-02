@@ -18,13 +18,13 @@ enum Keys { Up = 72, Left = 75, Right = 77, Down = 80, Enter = 13, Esc = 27, Bac
 
 enum Direction { U = 0, L = 1, R = 2, D = 3 };
 
-struct Coords {
-	int x;
-	int y;
-	int status;
-	Coords();
-	Coords(int,int,int);
-};
+//struct Coords {
+//	int x;
+//	int y;
+//	int status;
+//	Coords();
+//	Coords(int,int,int);
+//};
 
 struct Coord {
 	int x;
@@ -48,8 +48,8 @@ struct Coord {
 
 class Field {
 protected:
-	Coords _friendlyShipField[10][10];
-	Coords _enemyShipField[10][10];
+	int _friendlyShipField[10][10];
+	int _enemyShipField[10][10];
 	Field();
 	void setShipFieldCellStatus(char, int, int, int);
 	int getStatus(int, int);

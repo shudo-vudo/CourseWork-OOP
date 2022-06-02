@@ -1,42 +1,26 @@
 #include "Game.h"
 
-Coords::Coords() {
-	this->status = 0;
-	this->x = 0;
-	this->y = 0;
-}
-
-Coords::Coords(int xc, int yc, int stat) {
-	this->x = xc;
-	this->y = yc;
-	this->status = stat;
-}
-
 Field::Field() {
 	for (int i = 0; i < 10; i++)
 		for (int j = 0; j < 10; j++) {
-			_friendlyShipField[i][j].x = i;
-			_friendlyShipField[i][j].y = j;
-			_friendlyShipField[i][j].status = 0;
-			_enemyShipField[i][j].x = i;
-			_enemyShipField[i][j].y = j;
-			_enemyShipField[i][j].status = 0;
+			_friendlyShipField[i][j] = 0;
+			_enemyShipField[i][j] = 0;
 		}
 }
 
 void Field::setShipFieldCellStatus(char type, int x, int y, int stat) {
 	if (type == 'f')
-		this->_friendlyShipField[x][y].status = stat;
+		this->_friendlyShipField[x][y] = stat;
 	else if (type == 'e')
-		this->_enemyShipField[x][y].status = stat;
+		this->_enemyShipField[x][y] = stat;
 }
 
 int Field::getStatus(int x, int y) {
-	return this->_friendlyShipField[x][y].status;
+	return this->_friendlyShipField[x][y];
 }
 
 int Field::getEnemyStatus(int x, int y) {
-	return this->_enemyShipField[x][y].status;
+	return this->_enemyShipField[x][y];
 }
 
 void Field::drawFields() {
@@ -54,11 +38,11 @@ void Field::drawFields() {
 			if (j == 0 || j == 11 || j == 15 || j == 26)
 				cout << "|";
 			else if (j < 11) {
-				if (_friendlyShipField[i][j - 1].status == 1)
+				if (_friendlyShipField[i][j - 1] == 1)
 					cout << "X";
-				else if (_friendlyShipField[i][j - 1].status == 2)
+				else if (_friendlyShipField[i][j - 1] == 2)
 					cout << "O";
-				else if (_friendlyShipField[i][j - 1].status == 3) {
+				else if (_friendlyShipField[i][j - 1] == 3) {
 					cout << char(219);
 				}
 				else
@@ -67,11 +51,11 @@ void Field::drawFields() {
 			else if (j > 11 && j < 15)
 				cout << " ";
 			else if (j > 15) {
-				if (_enemyShipField[i][j - 16].status == 1)
+				if (_enemyShipField[i][j - 16] == 1)
 					cout << "X";
-				else if (_enemyShipField[i][j - 16].status == 2)
+				else if (_enemyShipField[i][j - 16] == 2)
 					cout << "O";
-				else if (_enemyShipField[i][j - 16].status == 3) {
+				else if (_enemyShipField[i][j - 16] == 3) {
 					cout << char(219);
 				}
 				else
@@ -143,11 +127,11 @@ void Field::showtempFields(int choose) {
 void Field::showEnemyField() {
 	for (int i = 0; i < 10; i++)
 		for (int j = 0; j < 10; j++) {
-			if (_enemyShipField[i][j].status == 1) {
+			if (_enemyShipField[i][j] == 1) {
 				gotoxy(i + 16, j + 1);
 				cout << "X";
 			}
-			else if (_enemyShipField[i][j].status == 2) {
+			else if (_enemyShipField[i][j] == 2) {
 				gotoxy(i + 16, j + 1);
 				cout << "O";
 			}
@@ -162,13 +146,13 @@ bool Field::checkFields(char type) {
 	if (type == 'f')
 		for (int i = 0; i < 10; i++)
 			for (int j = 1; j < 10; j++) {
-				if (_friendlyShipField[i][j].status == 2)
+				if (_friendlyShipField[i][j] == 2)
 					return false;
 			}
 	else if (type == 'e')
 		for (int i = 0; i < 10; i++)
 			for (int j = 1; j < 10; j++) {
-				if (_enemyShipField[i][j].status == 2)
+				if (_enemyShipField[i][j] == 2)
 					return false;
 			}
 	return true;
@@ -178,11 +162,11 @@ void Field::clearFields(char type) {
 	if (type == 'f')
 		for (int i = 0; i < 10; i++)
 			for (int j = 0; j < 10; j++)
-				this->_friendlyShipField[i][j].status = 0;
+				this->_friendlyShipField[i][j] = 0;
 	else if (type == 'e')
 		for (int i = 0; i < 10; i++)
 			for (int j = 0; j < 10; j++)
-				this->_enemyShipField[i][j].status = 0;
+				this->_enemyShipField[i][j] = 0;
 }
 
 bool Field::checkRandom(char type) {
@@ -190,14 +174,14 @@ bool Field::checkRandom(char type) {
 	if (type == 'f') {
 		for (int i = 0; i < 10; i++)
 			for (int j = 0; j < 10; j++) {
-				if (this->_friendlyShipField[i][j].status == 3)
+				if (this->_friendlyShipField[i][j] == 3)
 					count += 1;
 			}
 	}
 	else {
 		for (int i = 0; i < 10; i++)
 			for (int j = 0; j < 10; j++) {
-				if (this->_enemyShipField[i][j].status == 3)
+				if (this->_enemyShipField[i][j] == 3)
 					count += 1;
 			}
 	}
@@ -220,10 +204,10 @@ void Field::setFieldManually() {
 		bool QIsPressed = false;
 		Ship ship(deck, false);
 		for (int i = 0; i < deck; i++) {
-			if (this->_friendlyShipField[0][i].status == 3 || this->_friendlyShipField[0][i].status == 6)
-				ship._friendlyShipField[0][i].status = 2;
+			if (this->_friendlyShipField[0][i] == 3 || this->_friendlyShipField[0][i] == 6)
+				ship._friendlyShipField[0][i] = 2;
 			else
-				ship._friendlyShipField[0][i].status = 1;
+				ship._friendlyShipField[0][i] = 1;
 		}
 		this->showtempFields(1);
 		ship.showtempFields(0);
@@ -237,7 +221,7 @@ void Field::setFieldManually() {
 							int i = 1;
 							while (i!=deck) {
 								ship.setShipFieldCellStatus('f', x + i, y, 0);
-								if (this->_friendlyShipField[x][y + i].status == 3 || this->_friendlyShipField[x][y + i].status == 6)
+								if (this->_friendlyShipField[x][y + i] == 3 || this->_friendlyShipField[x][y + i] == 6)
 									ship.setShipFieldCellStatus('f', x, y + i, 2);
 								else
 									ship.setShipFieldCellStatus('f', x, y + i, 1);
@@ -251,7 +235,7 @@ void Field::setFieldManually() {
 							int i = 1;
 							while (i != deck) {
 								ship.setShipFieldCellStatus('f', x, y + i, 0);
-								if (this->_friendlyShipField[x + i][y].status == 3 || this->_friendlyShipField[x + i][y].status == 6)
+								if (this->_friendlyShipField[x + i][y] == 3 || this->_friendlyShipField[x + i][y] == 6)
 									ship.setShipFieldCellStatus('f', x + i, y, 2);
 								else 
 									ship.setShipFieldCellStatus('f', x + i, y, 1);
@@ -275,7 +259,7 @@ void Field::setFieldManually() {
 				case Keys::Left: if (QIsPressed == true) {
 						if (y > 0 && y < 10 && ship.isHorisont() == true) {
 							for (int i = 0; i < deck; i++) {
-								if (this->_friendlyShipField[x + i][y - 1].status == 3 || this->_friendlyShipField[x + i][y - 1].status == 6)
+								if (this->_friendlyShipField[x + i][y - 1] == 3 || this->_friendlyShipField[x + i][y - 1] == 6)
 									ship.setShipFieldCellStatus('f', x + i, y - 1, 2);
 								else
 									ship.setShipFieldCellStatus('f', x + i, y - 1, 1);
@@ -284,7 +268,7 @@ void Field::setFieldManually() {
 							y -= 1;
 						}
 						else if (y > 0 && y < 10 && ship.isHorisont() == false) {
-							if (this->_friendlyShipField[x][y - 1].status == 3 || this->_friendlyShipField[x][y - 1].status == 6)
+							if (this->_friendlyShipField[x][y - 1] == 3 || this->_friendlyShipField[x][y - 1] == 6)
 								ship.setShipFieldCellStatus('f', x, y - 1, 2);
 							else
 								ship.setShipFieldCellStatus('f', x, y - 1, 1);
@@ -299,7 +283,7 @@ void Field::setFieldManually() {
 				case Keys::Right: if (QIsPressed == true) {
 						if (y < 9 && y >= 0 && ship.isHorisont() == true) {
 							for (int i = 0; i < deck; i++) {
-								if (this->_friendlyShipField[x + i][y + 1].status == 3 || this->_friendlyShipField[x + i][y + 1].status == 6)
+								if (this->_friendlyShipField[x + i][y + 1] == 3 || this->_friendlyShipField[x + i][y + 1] == 6)
 									ship.setShipFieldCellStatus('f', x + i, y + 1, 2);
 								else
 									ship.setShipFieldCellStatus('f', x + i, y + 1, 1);
@@ -308,7 +292,7 @@ void Field::setFieldManually() {
 							y += 1;
 						}
 						else if (y < 10 - deck && y >= 0 && ship.isHorisont() == false) {
-							if (this->_friendlyShipField[x][y + deck].status == 3 || this->_friendlyShipField[x][y + deck].status == 6)
+							if (this->_friendlyShipField[x][y + deck] == 3 || this->_friendlyShipField[x][y + deck] == 6)
 								ship.setShipFieldCellStatus('f', x, y + deck, 2);
 							else
 								ship.setShipFieldCellStatus('f', x, y + deck, 1);
@@ -322,7 +306,7 @@ void Field::setFieldManually() {
 				// completed
 				case Keys::Down: if (QIsPressed == true) {
 						if (x < 10 - deck && x >= 0 && ship.isHorisont() == true) {
-							if (this->_friendlyShipField[x + deck][y].status == 3 || this->_friendlyShipField[x + deck][y].status == 6)
+							if (this->_friendlyShipField[x + deck][y] == 3 || this->_friendlyShipField[x + deck][y] == 6)
 								ship.setShipFieldCellStatus('f', x + deck, y, 2);
 							else
 								ship.setShipFieldCellStatus('f', x + deck, y, 1);
@@ -331,7 +315,7 @@ void Field::setFieldManually() {
 						}
 						else if (x < 9 && x >= 0 && ship.isHorisont() == false) {
 							for (int i = 0; i < deck; i++) {
-								if (this->_friendlyShipField[x + 1][y + i].status == 3 || this->_friendlyShipField[x + 1][y + i].status == 6)
+								if (this->_friendlyShipField[x + 1][y + i] == 3 || this->_friendlyShipField[x + 1][y + i] == 6)
 									ship.setShipFieldCellStatus('f', x + 1, y + i, 2);
 								else
 									ship.setShipFieldCellStatus('f', x + 1, y + i, 1);
@@ -346,7 +330,7 @@ void Field::setFieldManually() {
 				// completed
 				case Keys::Up: if (QIsPressed == true) {
 						if (x > 0 && x < 10 && ship.isHorisont() == true) {
-							if (this->_friendlyShipField[x - 1][y].status == 3 || this->_friendlyShipField[x - 1][y].status == 6)
+							if (this->_friendlyShipField[x - 1][y] == 3 || this->_friendlyShipField[x - 1][y] == 6)
 								ship.setShipFieldCellStatus('f', x - 1, y, 2);
 							else
 								ship.setShipFieldCellStatus('f', x - 1, y, 1);
@@ -355,7 +339,7 @@ void Field::setFieldManually() {
 						}
 						else if (x > 0 && x < 10 && ship.isHorisont() == false) {
 							for (int i = 0; i < deck; i++) {
-								if (this->_friendlyShipField[x - 1][y + i].status == 3 || this->_friendlyShipField[x - 1][y + i].status == 6)
+								if (this->_friendlyShipField[x - 1][y + i] == 3 || this->_friendlyShipField[x - 1][y + i] == 6)
 									ship.setShipFieldCellStatus('f', x - 1, y + i, 2);
 								else
 									ship.setShipFieldCellStatus('f', x - 1, y + i, 1);
@@ -373,54 +357,54 @@ void Field::setFieldManually() {
 							ship.clearFields('f');
 							if (ship.isHorisont() == true) {
 								for (int i = 0; i < deck; i++)
-									this->_friendlyShipField[x + i][y].status = 3;
+									this->_friendlyShipField[x + i][y] = 3;
 								if (x != 0) {
-									this->_friendlyShipField[x - 1][y].status = 6;
+									this->_friendlyShipField[x - 1][y] = 6;
 									if (y != 0)
-										this->_friendlyShipField[x - 1][y - 1].status = 6;
+										this->_friendlyShipField[x - 1][y - 1] = 6;
 									if (y != 9)
-										this->_friendlyShipField[x - 1][y + 1].status = 6;
+										this->_friendlyShipField[x - 1][y + 1] = 6;
 								}
 								if (x + deck < 9) {
-									this->_friendlyShipField[x + deck][y].status = 6;
+									this->_friendlyShipField[x + deck][y] = 6;
 									if (y != 0)
-										this->_friendlyShipField[x + deck][y - 1].status = 6;
+										this->_friendlyShipField[x + deck][y - 1] = 6;
 									if (y != 9)
-										this->_friendlyShipField[x + deck][y + 1].status = 6;
+										this->_friendlyShipField[x + deck][y + 1] = 6;
 								}
 								if (y != 0)
 									for (int i = 0; i < deck; i++) {
-										this->_friendlyShipField[x + i][y - 1].status = 6;
+										this->_friendlyShipField[x + i][y - 1] = 6;
 									}
 								if (y != 9)
 									for (int i = 0; i < deck; i++) {
-										this->_friendlyShipField[x + i][y + 1].status = 6;
+										this->_friendlyShipField[x + i][y + 1] = 6;
 									}
 							}
 							else if (ship.isHorisont() == false) {
 								for (int i = 0; i < deck; i++)
-									this->_friendlyShipField[x][y + i].status = 3;
+									this->_friendlyShipField[x][y + i] = 3;
 								if (x != 0)
 									for (int i = 0; i < deck; i++) {
-										this->_friendlyShipField[x - 1][y + i].status = 6;
+										this->_friendlyShipField[x - 1][y + i] = 6;
 									}
 								if (x != 9)
 									for (int i = 0; i < deck; i++) {
-										this->_friendlyShipField[x + 1][y + i].status = 6;
+										this->_friendlyShipField[x + 1][y + i] = 6;
 									}
 								if (y != 0) {
-									this->_friendlyShipField[x][y - 1].status = 6;
+									this->_friendlyShipField[x][y - 1] = 6;
 									if (x != 0)
-										this->_friendlyShipField[x - 1][y - 1].status = 6;
+										this->_friendlyShipField[x - 1][y - 1] = 6;
 									if (x != 9)
-										this->_friendlyShipField[x + 1][y - 1].status = 6;
+										this->_friendlyShipField[x + 1][y - 1] = 6;
 								}
 								if (y + deck < 9) {
-									this->_friendlyShipField[x][y + deck].status = 6;
+									this->_friendlyShipField[x][y + deck] = 6;
 									if (x != 0)
-										this->_friendlyShipField[x - 1][y + deck].status = 6;
+										this->_friendlyShipField[x - 1][y + deck] = 6;
 									if (x != 9)
-										this->_friendlyShipField[x + 1][y + deck].status = 6;
+										this->_friendlyShipField[x + 1][y + deck] = 6;
 								}
 							}
 							set = true;
@@ -466,7 +450,7 @@ void Field::setFieldRandomly(char type) {
 						x = rand() % (11 - deck);
 						y = rand() % 10;
 						for (int i = 0; i < deck; i++) {
-							if (this->_friendlyShipField[x + i][y].status == 3 || this->_friendlyShipField[x + i][y].status == 6) {
+							if (this->_friendlyShipField[x + i][y] == 3 || this->_friendlyShipField[x + i][y] == 6) {
 								ship.setShipFieldCellStatus(type, x + i, y, 2);
 							}
 							else {
@@ -478,7 +462,7 @@ void Field::setFieldRandomly(char type) {
 						x = rand() % 10;
 						y = rand() % (11 - deck);
 						for (int i = 0; i < deck; i++) {
-							if (this->_friendlyShipField[x][y + i].status == 3 || this->_friendlyShipField[x][y + i].status == 6) {
+							if (this->_friendlyShipField[x][y + i] == 3 || this->_friendlyShipField[x][y + i] == 6) {
 								ship.setShipFieldCellStatus(type, x, y + i, 2);
 							}
 							else {
@@ -490,54 +474,54 @@ void Field::setFieldRandomly(char type) {
 						ship.clearFields(type);
 						if (ship.isHorisont() == true) {
 							for (int i = 0; i < deck; i++)
-								this->_friendlyShipField[x + i][y].status = 3;
+								this->_friendlyShipField[x + i][y] = 3;
 							if (x != 0) {
-								this->_friendlyShipField[x - 1][y].status = 6;
+								this->_friendlyShipField[x - 1][y] = 6;
 								if (y != 0)
-									this->_friendlyShipField[x - 1][y - 1].status = 6;
+									this->_friendlyShipField[x - 1][y - 1] = 6;
 								if (y != 9)
-									this->_friendlyShipField[x - 1][y + 1].status = 6;
+									this->_friendlyShipField[x - 1][y + 1] = 6;
 							}
 							if (x + deck < 9) {
-								this->_friendlyShipField[x + deck][y].status = 6;
+								this->_friendlyShipField[x + deck][y] = 6;
 								if (y != 0)
-									this->_friendlyShipField[x + deck][y - 1].status = 6;
+									this->_friendlyShipField[x + deck][y - 1] = 6;
 								if (y != 9)
-									this->_friendlyShipField[x + deck][y + 1].status = 6;
+									this->_friendlyShipField[x + deck][y + 1] = 6;
 							}
 							if (y != 0)
 								for (int i = 0; i < deck; i++) {
-									this->_friendlyShipField[x + i][y - 1].status = 6;
+									this->_friendlyShipField[x + i][y - 1] = 6;
 								}
 							if (y != 9)
 								for (int i = 0; i < deck; i++) {
-									this->_friendlyShipField[x + i][y + 1].status = 6;
+									this->_friendlyShipField[x + i][y + 1] = 6;
 								}
 						}
 						else if (ship.isHorisont() == false) {
 							for (int i = 0; i < deck; i++)
-								this->_friendlyShipField[x][y + i].status = 3;
+								this->_friendlyShipField[x][y + i] = 3;
 							if (x != 0)
 								for (int i = 0; i < deck; i++) {
-									this->_friendlyShipField[x - 1][y + i].status = 6;
+									this->_friendlyShipField[x - 1][y + i] = 6;
 								}
 							if (x != 9)
 								for (int i = 0; i < deck; i++) {
-									this->_friendlyShipField[x + 1][y + i].status = 6;
+									this->_friendlyShipField[x + 1][y + i] = 6;
 								}
 							if (y != 0) {
-								this->_friendlyShipField[x][y - 1].status = 6;
+								this->_friendlyShipField[x][y - 1] = 6;
 								if (x != 0)
-									this->_friendlyShipField[x - 1][y - 1].status = 6;
+									this->_friendlyShipField[x - 1][y - 1] = 6;
 								if (x != 9)
-									this->_friendlyShipField[x + 1][y - 1].status = 6;
+									this->_friendlyShipField[x + 1][y - 1] = 6;
 							}
 							if (y + deck < 9) {
-								this->_friendlyShipField[x][y + deck].status = 6;
+								this->_friendlyShipField[x][y + deck] = 6;
 								if (x != 0)
-									this->_friendlyShipField[x - 1][y + deck].status = 6;
+									this->_friendlyShipField[x - 1][y + deck] = 6;
 								if (x != 9)
-									this->_friendlyShipField[x + 1][y + deck].status = 6;
+									this->_friendlyShipField[x + 1][y + deck] = 6;
 							}
 						}
 						set = true;
@@ -573,7 +557,7 @@ void Field::setFieldRandomly(char type) {
 					x = rand() % (11 - deck);
 					y = rand() % 10;
 					for (int i = 0; i < deck; i++) {
-						if (this->_enemyShipField[x + i][y].status == 3 || this->_enemyShipField[x + i][y].status == 6) {
+						if (this->_enemyShipField[x + i][y] == 3 || this->_enemyShipField[x + i][y] == 6) {
 							ship.setShipFieldCellStatus(type, x + i, y, 2);
 						}
 						else {
@@ -585,7 +569,7 @@ void Field::setFieldRandomly(char type) {
 					x = rand() % 10;
 					y = rand() % (11 - deck);
 					for (int i = 0; i < deck; i++) {
-						if (this->_enemyShipField[x][y + i].status == 3 || this->_enemyShipField[x][y + i].status == 6) {
+						if (this->_enemyShipField[x][y + i] == 3 || this->_enemyShipField[x][y + i] == 6) {
 							ship.setShipFieldCellStatus(type, x, y + i, 2);
 						}
 						else {
@@ -597,54 +581,54 @@ void Field::setFieldRandomly(char type) {
 					ship.clearFields(type);
 					if (ship.isHorisont() == true) {
 						for (int i = 0; i < deck; i++)
-							this->_enemyShipField[x + i][y].status = 3;
+							this->_enemyShipField[x + i][y] = 3;
 						if (x != 0) {
-							this->_enemyShipField[x - 1][y].status = 6;
+							this->_enemyShipField[x - 1][y] = 6;
 							if (y != 0)
-								this->_enemyShipField[x - 1][y - 1].status = 6;
+								this->_enemyShipField[x - 1][y - 1] = 6;
 							if (y != 9)
-								this->_enemyShipField[x - 1][y + 1].status = 6;
+								this->_enemyShipField[x - 1][y + 1] = 6;
 						}
 						if (x + deck < 9) {
-							this->_enemyShipField[x + deck][y].status = 6;
+							this->_enemyShipField[x + deck][y] = 6;
 							if (y != 0)
-								this->_enemyShipField[x + deck][y - 1].status = 6;
+								this->_enemyShipField[x + deck][y - 1] = 6;
 							if (y != 9)
-								this->_enemyShipField[x + deck][y + 1].status = 6;
+								this->_enemyShipField[x + deck][y + 1] = 6;
 						}
 						if (y != 0)
 							for (int i = 0; i < deck; i++) {
-								this->_enemyShipField[x + i][y - 1].status = 6;
+								this->_enemyShipField[x + i][y - 1] = 6;
 							}
 						if (y != 9)
 							for (int i = 0; i < deck; i++) {
-								this->_enemyShipField[x + i][y + 1].status = 6;
+								this->_enemyShipField[x + i][y + 1] = 6;
 							}
 					}
 					else if (ship.isHorisont() == false) {
 						for (int i = 0; i < deck; i++)
-							this->_enemyShipField[x][y + i].status = 3;
+							this->_enemyShipField[x][y + i] = 3;
 						if (x != 0)
 							for (int i = 0; i < deck; i++) {
-								this->_enemyShipField[x - 1][y + i].status = 6;
+								this->_enemyShipField[x - 1][y + i] = 6;
 							}
 						if (x != 9)
 							for (int i = 0; i < deck; i++) {
-								this->_enemyShipField[x + 1][y + i].status = 6;
+								this->_enemyShipField[x + 1][y + i] = 6;
 							}
 						if (y != 0) {
-							this->_enemyShipField[x][y - 1].status = 6;
+							this->_enemyShipField[x][y - 1] = 6;
 							if (x != 0)
-								this->_enemyShipField[x - 1][y - 1].status = 6;
+								this->_enemyShipField[x - 1][y - 1] = 6;
 							if (x != 9)
-								this->_enemyShipField[x + 1][y - 1].status = 6;
+								this->_enemyShipField[x + 1][y - 1] = 6;
 						}
 						if (y + deck < 9) {
-							this->_enemyShipField[x][y + deck].status = 6;
+							this->_enemyShipField[x][y + deck - 1] = 6;
 							if (x != 0)
-								this->_enemyShipField[x - 1][y + deck].status = 6;
+								this->_enemyShipField[x - 1][y + deck - 1] = 6;
 							if (x != 9)
-								this->_enemyShipField[x + 1][y + deck].status = 6;
+								this->_enemyShipField[x + 1][y + deck - 1] = 6;
 						}
 					}
 					set = true;
@@ -667,12 +651,12 @@ void Field::setFieldRandomly(char type) {
 void Field::setFieldsForGame() {
 	for (int i = 0; i < 10; i++)
 		for (int j = 0; j < 10; j++) {
-			if (this->_enemyShipField[i][j].status == 3)
-				this->_enemyShipField[i][j].status = 5;
-			if (this->_enemyShipField[i][j].status == 6)
-				this->_enemyShipField[i][j].status = 0;
-			if (this->_friendlyShipField[i][j].status == 6)
-				this->_friendlyShipField[i][j].status = 0;
+			if (this->_enemyShipField[i][j] == 3)
+				this->_enemyShipField[i][j] = 5;
+			if (this->_enemyShipField[i][j] == 6)
+				this->_enemyShipField[i][j] = 0;
+			if (this->_friendlyShipField[i][j] == 6)
+				this->_friendlyShipField[i][j] = 0;
 		}
 }
 
