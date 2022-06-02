@@ -169,7 +169,7 @@ int main()
         gotoxy(0, 15);
         cout << "        Let's go!";
         sleep_for(seconds(2));
-        char turn = 'e'; //
+        char turn = 'f';
         int x = 0;
         int y = 0;
         while (game.isEnd() == false) {
@@ -206,7 +206,7 @@ int main()
                 sleep_for(seconds(1));
                 while (true) {
                     if (game.shoot('e') == false) {
-                        turn = 'e';//
+                        turn = 'f';
                         gotoxy(0, 15);
                         cout << "        ENEMY MISSES                                                  ";
                         sleep_for(seconds(1));
