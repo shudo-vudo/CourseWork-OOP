@@ -191,6 +191,10 @@ int main()
                     gotoxy(0, 15);
                     cout << "        HIT!                                                      ";
                     sleep_for(seconds(1));
+                    if (game.whoIsWinner() != 'n') {
+                        game.End();
+                        break;
+                    }
                     gotoxy(0, 15);
                     cout << "        Your turn! Select cell for shoot.                 ";
                 }
@@ -214,6 +218,10 @@ int main()
                     cout << "        HIT!                                                      ";
                     sleep_for(seconds(1));
                     gotoxy(0, 15);
+                    if (game.whoIsWinner() != 'n') {
+                        game.End();
+                        break;
+                    }
                     cout << "        Enemy turn!                                           ";
                     sleep_for(seconds(1));
                 }
