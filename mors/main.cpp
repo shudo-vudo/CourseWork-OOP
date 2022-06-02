@@ -268,6 +268,7 @@ int main()
                 if (height == 0) {
                     cout << "Ok. Thanks for playing!";
                     restart = false;
+                    choice = true;
                 }
                 else if (height == 1) {
                     choice = true;
