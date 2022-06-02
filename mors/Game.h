@@ -93,6 +93,7 @@ public:
 	bool isDeadShip(int, int, int);
 	bool isEnemyDeadShip(int, int);
 	void End();
+	void Restart();
 };
 
 struct Point {

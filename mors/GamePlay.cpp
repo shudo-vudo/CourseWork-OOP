@@ -549,6 +549,13 @@ void Game::End() {
 	_end = true;
 }
 
+void Game::Restart() {
+	this->clearFields('e');
+	this->clearFields('f');
+	this->drawFields();
+	_end = false;
+}
+
 void Point::showPoint(int x, int y) {
 	gotoxy(x + 16, y + 1);
 	cout << "*";
