@@ -14,17 +14,9 @@ using namespace std;
 using namespace this_thread;
 using namespace chrono;
 
-enum Keys { Up = 72, Left = 75, Right = 77, Down = 80, Enter = 13, Esc = 27, BackSpace = 8, Q = 113 };
+enum Keys { Up = 72, Left = 75, Right = 77, Down = 80, Enter = 13, Q = 113 };
 
 enum Direction { U = 0, L = 1, R = 2, D = 3 };
-
-//struct Coords {
-//	int x;
-//	int y;
-//	int status;
-//	Coords();
-//	Coords(int,int,int);
-//};
 
 struct Coord {
 	int x;
@@ -77,6 +69,7 @@ public:
 	void swap();
 	int getShipDeck();
 };
+
 void gotoxy(int, int);
 
 class Game : public Field {
