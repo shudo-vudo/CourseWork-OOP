@@ -90,7 +90,6 @@ public:
 	void markFriendlyDeadShip();
 	void markEnemyDeadShip();
 	bool isDeadShip(int, int);
-	bool isDeadShip(int, int, int);
 	bool isEnemyDeadShip(int, int);
 	void End();
 	void Restart();
