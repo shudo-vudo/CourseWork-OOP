@@ -17,9 +17,7 @@ Game::Game() : Field() {
 	}
 	_end = false;
 	_AIwork = false;
-	_isTurned = false;
 	_tempDeadShip.resize(0);
-	_tempDeadFriendlyShip.resize(0);
 	for (int i = 0; i < 4; i++) {
 		_wasDirection[i] = 0;
 	}
@@ -51,10 +49,10 @@ bool Game::isEnd() {
 
 bool Game::isEnemyDeadShip(int x, int y) {
 	bool ended = false;
-	_tempDeadFriendlyShip.clear();
-	_tempDeadFriendlyShip.shrink_to_fit();
+	_tempDeadShip.clear();
+	_tempDeadShip.shrink_to_fit();
 	Coord temp(x, y);
-	_tempDeadFriendlyShip.push_back(temp);
+	_tempDeadShip.push_back(temp);
 	if ((this->getEnemyStatus(x + 1, y) == 0 || this->getEnemyStatus(x + 1, y) == 2 || (x + 1 > 9))
 		&& (this->getEnemyStatus(x, y + 1) == 0 || this->getEnemyStatus(x, y + 1) == 2 || (x + 1 > 9))
 		&& (this->getEnemyStatus(abs(x - 1), y) == 0 || this->getEnemyStatus(abs(x - 1), y) == 2)
@@ -70,7 +68,7 @@ bool Game::isEnemyDeadShip(int x, int y) {
 			else if (this->getEnemyStatus(x + i, y) == 1) {
 				temp.x = x + i;
 				temp.y = y;
-				_tempDeadFriendlyShip.push_back(temp);
+				_tempDeadShip.push_back(temp);
 				i++;
 				continue;
 			}
@@ -91,7 +89,7 @@ bool Game::isEnemyDeadShip(int x, int y) {
 			else if (this->getEnemyStatus(x - i, y) == 1) {
 				temp.x = x - i;
 				temp.y = y;
-				_tempDeadFriendlyShip.push_back(temp);
+				_tempDeadShip.push_back(temp);
 				i++;
 				continue;
 			}
@@ -112,7 +110,7 @@ bool Game::isEnemyDeadShip(int x, int y) {
 			else if (this->getEnemyStatus(x, y + i) == 1) {
 				temp.x = x;
 				temp.y = y + i;
-				_tempDeadFriendlyShip.push_back(temp);
+				_tempDeadShip.push_back(temp);
 				i++;
 				continue;
 			}
@@ -133,7 +131,7 @@ bool Game::isEnemyDeadShip(int x, int y) {
 			else if (this->getEnemyStatus(x, y - i) == 1) {
 				temp.x = x;
 				temp.y = y - i;
-				_tempDeadFriendlyShip.push_back(temp);
+				_tempDeadShip.push_back(temp);
 				i++;
 				continue;
 			}
@@ -176,10 +174,10 @@ void Game::markFriendlyDeadShip() {
 void Game::markEnemyDeadShip() {
 	int x = 0;
 	int y = 0;
-	_tempDeadFriendlyShip.shrink_to_fit();
-	for (int i = 0; i < _tempDeadFriendlyShip.capacity(); i++) {
-		x = _tempDeadFriendlyShip[i].x;
-		y = _tempDeadFriendlyShip[i].y;
+	_tempDeadShip.shrink_to_fit();
+	for (int i = 0; i < _tempDeadShip.capacity(); i++) {
+		x = _tempDeadShip[i].x;
+		y = _tempDeadShip[i].y;
 		for (int j = 0; j < 3; j++) {
 			if ((this->getEnemyStatus(abs(x - 1 + j), abs(y - 1)) == 2 || this->getEnemyStatus(abs(x - 1 + j), abs(y - 1)) == 0) && (x - 1 + j < 10))
 				_enemyShipField[abs(x - 1 + j)][abs(y - 1)] = 2;
@@ -195,8 +193,8 @@ void Game::markEnemyDeadShip() {
 			_enemyShipField[x + 1][y] = 2;
 		}
 	}
-	_tempDeadFriendlyShip.clear();
-	_tempDeadFriendlyShip.shrink_to_fit();
+	_tempDeadShip.clear();
+	_tempDeadShip.shrink_to_fit();
 }
 
 bool Game::shoot(char type) {
@@ -280,7 +278,7 @@ bool Game::shoot(char type) {
 					_AIwork = true;
 					Coord temp(x, y);
 					_tempDeadShip.push_back(temp);
-					if (isDeadShip(x, y) == true) {
+					if (isFriendlyDeadShip(x, y) == true) {
 						_AIwork = false;
 						this->markFriendlyDeadShip();
 					}
@@ -316,7 +314,7 @@ bool Game::shoot(char type) {
 					this->_friendlyShipField[x][y] = 1;
 					Coord temp(x, y);
 					_tempDeadShip.push_back(temp);
-					if (isDeadShip(_tempAICells[0].x, _tempAICells[0].y) == true) {
+					if (isFriendlyDeadShip(_tempAICells[0].x, _tempAICells[0].y) == true) {
 						_AIwork = false;
 						this->markFriendlyDeadShip();
 						for (int i = 0; i < 4; i++)
@@ -447,7 +445,7 @@ void Game::AIChooseDirection(int x, int y) {
 	}
 }
 
-bool Game::isDeadShip(int x, int y) {
+bool Game::isFriendlyDeadShip(int x, int y) {
 	bool ended = false;
 	_tempDeadShip.clear();
 	_tempDeadShip.shrink_to_fit();

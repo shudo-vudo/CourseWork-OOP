@@ -74,25 +74,23 @@ void gotoxy(int, int);
 
 class Game : public Field {
 private:
-	bool _end;
-	int _wasDirection[4];
-	Coord _tempAICells[2];
-	vector<Coord> _tempDeadShip;
-	vector<Coord> _tempDeadFriendlyShip;
-	bool _AIwork;
-	bool _isTurned;
+	bool _end; // булевая переменная конца игры
+	int _wasDirection[4]; // целочисленный массив, предназначенный для запоминания направления стрельбы компьютера
+	Coord _tempAICells[2]; // массив структур Coord для регулирования ходов компьютера
+	vector<Coord> _tempDeadShip; // контейнер структур Coord для запоминания клеток умершего корабля
+	bool _AIwork; // булевая переменная, отвечающая за работу анализа поломанного корабля
 public:
 	Game();
-	char whoIsWinner();
-	void AIChooseDirection(int, int);
-	bool isEnd();
-	bool shoot(char);
-	void markFriendlyDeadShip();
-	void markEnemyDeadShip();
-	bool isDeadShip(int, int);
-	bool isEnemyDeadShip(int, int);
-	void End();
-	void Restart();
+	char whoIsWinner(); // метод определения победителя
+	void AIChooseDirection(int, int); // метод для выбора направления стрельбы бота
+	bool isEnd(); // метод геттер, выдает, закончилась игра или нет
+	bool shoot(char); // метод стрельбы
+	void markFriendlyDeadShip(); // метод пометки полей вокруг умершего корабля игрока
+	void markEnemyDeadShip(); // метод пометки полей вокруг умершего корабля компьютера
+	bool isFriendlyDeadShip(int, int); // метод определения состояния корабля игрока
+	bool isEnemyDeadShip(int, int); // метод определения состояния корабля компьютера
+	void End(); // метод установки окончания игры
+	void Restart(); // метод установки начала игры
 };
 
 struct Point {
