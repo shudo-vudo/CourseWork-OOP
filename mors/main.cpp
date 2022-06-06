@@ -168,6 +168,7 @@ int main()
         game.setFieldsForGame();
         gotoxy(0, 15);
         cout << "        Let's go!";
+        game.showtempFields(3);
         sleep_for(seconds(2));
         char turn = 'f';
         int x = 0;

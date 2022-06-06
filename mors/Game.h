@@ -46,26 +46,26 @@ protected:
 	void setShipFieldCellStatus(char, int, int, int);
 	int getStatus(int, int);
 	int getEnemyStatus(int, int);
+	bool checkRandom(char);
+	bool checkFields(char);
 public:
 	void drawFields();
 	void showtempFields(int);
 	void showEnemyField();
-	bool checkFields(char);
 	void clearFields(char);
-	bool checkRandom(char);
 	void setFieldManually();
 	void setFieldRandomly(char);
 	void setFieldsForGame();
 };
 
 class Ship : public Field {
-protected:
+private:
 	bool _isHorisontal;
 	int _deck;
 public:
+	bool isHorisont();
 	Ship();
 	Ship(int, bool);
-	bool isHorisont();
 	void swap();
 	int getShipDeck();
 };

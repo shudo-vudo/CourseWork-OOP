@@ -201,9 +201,9 @@ bool Game::shoot(char type) {
 	int x = 0;
 	int y = 0;
 	bool choosenDirection = false;
-	Point projectile;
-	projectile.tempfield[0][0] = 1;
 	if (type == 'f') {
+		Point projectile;
+		projectile.tempfield[0][0] = 1;
 		while (true) {
 			this->showEnemyField();
 			projectile.showPoint(x, y);

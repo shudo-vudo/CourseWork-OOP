@@ -38,28 +38,12 @@ void Field::drawFields() {
 			if (j == 0 || j == 11 || j == 15 || j == 26)
 				cout << "|";
 			else if (j < 11) {
-				if (_friendlyShipField[i][j - 1] == 1)
-					cout << "X";
-				else if (_friendlyShipField[i][j - 1] == 2)
-					cout << "O";
-				else if (_friendlyShipField[i][j - 1] == 3) {
-					cout << char(219);
-				}
-				else
-					cout << " ";
+				cout << " ";
 			}
 			else if (j > 11 && j < 15)
 				cout << " ";
 			else if (j > 15) {
-				if (_enemyShipField[i][j - 16] == 1)
-					cout << "X";
-				else if (_enemyShipField[i][j - 16] == 2)
-					cout << "O";
-				else if (_enemyShipField[i][j - 16] == 3) {
-					cout << char(219);
-				}
-				else
-					cout << " ";
+				cout << " ";
 			}
 		}
 		cout << endl;
@@ -203,18 +187,18 @@ void Field::setFieldManually() {
 		bool set = false;
 		bool QIsPressed = false;
 		Ship ship(deck, false);
+		// цикл постановки начального положения на экране временного корабля
 		for (int i = 0; i < deck; i++) {
 			if (this->_friendlyShipField[0][i] == 3 || this->_friendlyShipField[0][i] == 6)
 				ship._friendlyShipField[0][i] = 2;
 			else
 				ship._friendlyShipField[0][i] = 1;
-		}
+		} 
 		this->showtempFields(1);
 		ship.showtempFields(0);
 		cout << endl << "For moving ship, press 'Q'.               ";
 		while (set != true) {
 			switch (_getch()) {
-				// good
 				case Keys::Q: {
 					if (ship.isHorisont() == true) {
 						if (y + deck - 1 < 10) {
@@ -255,7 +239,6 @@ void Field::setFieldManually() {
 					}
 					break;
 				}
-				// completed
 				case Keys::Left: if (QIsPressed == true) {
 						if (y > 0 && y < 10 && ship.isHorisont() == true) {
 							for (int i = 0; i < deck; i++) {
@@ -279,7 +262,6 @@ void Field::setFieldManually() {
 						ship.showtempFields(0);
 						break;
 					};
-				// completed
 				case Keys::Right: if (QIsPressed == true) {
 						if (y < 9 && y >= 0 && ship.isHorisont() == true) {
 							for (int i = 0; i < deck; i++) {
@@ -303,7 +285,6 @@ void Field::setFieldManually() {
 						ship.showtempFields(0);
 						break;
 					};
-				// completed
 				case Keys::Down: if (QIsPressed == true) {
 						if (x < 10 - deck && x >= 0 && ship.isHorisont() == true) {
 							if (this->_friendlyShipField[x + deck][y] == 3 || this->_friendlyShipField[x + deck][y] == 6)
@@ -327,7 +308,6 @@ void Field::setFieldManually() {
 						ship.showtempFields(0);
 						break;
 					};
-				// completed
 				case Keys::Up: if (QIsPressed == true) {
 						if (x > 0 && x < 10 && ship.isHorisont() == true) {
 							if (this->_friendlyShipField[x - 1][y] == 3 || this->_friendlyShipField[x - 1][y] == 6)
@@ -351,7 +331,6 @@ void Field::setFieldManually() {
 						ship.showtempFields(0);
 						break;
 					};
-				//  completed
 				case Keys::Enter: if (QIsPressed == true) {
 						if (ship.checkFields('f') == true) {
 							ship.clearFields('f');
